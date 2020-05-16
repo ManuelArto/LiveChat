@@ -1,5 +1,0 @@
-BACKEND/.env
-BACKEND/venv/
-BACKEND/app/__pycache__/
-BACKEND/.gitignore
-BACKEND/config.py
