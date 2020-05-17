@@ -7,9 +7,9 @@ class Users(db.Model):
 	__tablename = "USERS"
 	id = db.Column(db.Integer, primary_key=True)
 	uid = db.Column(db.String(50), unique=True)
-	email = db.Column(db.String(50))
-	username = db.Column(db.String(50))
-	password = db.Column(db.String(80))
+	email = db.Column(db.String(50), unique=True)
+	username = db.Column(db.String(50), unique=True)
+	password = db.Column(db.String(80), unique=True)
 
 	def __init__(self, email, username, password):
 		self.uid = str(uuid.uuid4())
