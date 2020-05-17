@@ -25,7 +25,7 @@ class _NewMessageState extends State<NewMessage> {
   }
 
   void _sendMessage() {
-    chatProvider.addMessage(_controller.text, username, widget.chatName);
+    chatProvider.sendMessage(_controller.text, widget.chatName);
     _controller.text = "";
   }
 

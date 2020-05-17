@@ -13,7 +13,7 @@ def token_required(f):
 		
 		token = request.headers['x-access-tokens'] if 'x-access-tokens' in request.headers else None
 
-		if not token:
+		if not token:	
 			return jsonify({'error': 'a valid token is missing'})
 		try:
 			data = jwt.decode(token, app.config["SECRET_KEY"])
@@ -25,6 +25,13 @@ def token_required(f):
 		return f(data, *args, **kwargs)
 	
 	return decorator
+
+def get_username(token):
+	try:
+		data = jwt.decode(token, app.config["SECRET_KEY"])
+		return data["username"]
+	except:
+		return None
 	
 def generate_token(user):
 	return jwt.encode({

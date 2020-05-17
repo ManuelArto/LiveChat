@@ -24,12 +24,12 @@ class _MessagesState extends State<Messages> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
     username = Provider.of<Auth>(context, listen: false).username;
   }
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
     final messages = Provider.of<ChatProvider>(context).messages(widget.chatName);
     return ListView.builder(
       controller: _scrollController,

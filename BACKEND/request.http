@@ -15,8 +15,8 @@ POST http://localhost:5000/api/login HTTP/1.1
 content-type: application/json
 
 {
-	"email": "test@gmail.com", 
-	"password": "passwordsicura"
+	"email": "device@test.com", 
+	"password": "ciaociao"
 }
 
 ###
