@@ -2,7 +2,7 @@ from flask import request, jsonify
 from sqlalchemy import exc
 from .. import app, db
 from ..models import Users
-from .jwt import generate_token, token_required
+from .jwt import token_required
 import datetime
 
 @app.route("/api/login", methods=["POST"])
@@ -17,7 +17,7 @@ def login():
 	except KeyError as e:
 		return jsonify({"error": f"Missing {str(e)}"})
 
-		return jsonify({"user": {"uid": user.uid, "username":user.username, "token": generate_token(user)}})
+	return jsonify(user.serialize())
 
 @app.route("/api/register", methods=["POST"])
 def signup():
@@ -31,4 +31,17 @@ def signup():
 	except KeyError as e:
 		return jsonify({"error": f"Missing {str(e)}"})
 
-	return jsonify({"user": {"uid": new_user.uid, "username":new_user.username, "token": generate_token(new_user)}}), 201
+	return jsonify(new_user.serialize())
+
+@app.route("/api/refresh-token", methods=["POST"])
+@token_required
+def refresh_token(data):
+	current_user = Users.query.filter_by(uid=data["uid"]).first()
+	return jsonify(current_user.serialize())
+
+
+@app.route("/private")
+@token_required
+def private(data):
+	current_user = Users.query.filter_by(uid=data["uid"]).first()
+	return jsonify({"user": [current_user.username, current_user.uid]})

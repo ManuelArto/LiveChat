@@ -1,10 +1,15 @@
-GET http://localhost:8000/private HTTP/1.1
+GET http://localhost:5000/private HTTP/1.1
 HEAD 
-x-access-tokens: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiIwNTZiNDA0Zi03N2Q2LTQ4OTItYmEyMC0wYTFiOTY5ZjhhMzEiLCJ1c2VybmFtZSI6Im1hbnVlbGFydG8iLCJleHAiOjE1ODk2Njk1MjR9.INuLKuEMqDJaJtG_lOde9Oj0vm0_fGtOsumq8td9ibI
+x-access-tokens: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiI3NGNkOGYxMC0zNDU3LTQwYmYtYTc2NS1iMTQ4YjEzMDIwNGMiLCJpYXQiOjE1ODk2ODMxMTYsImV4cCI6MTU4OTcwNDcxNn0.zwjhRHiVDkv_zJJhxI9DWCz71-w_10vi075Y0F9w6IA
+
+###
+POST http://localhost:5000/api/refresh-token HTTP/1.1
+HEAD 
+x-access-tokens: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiI3NGNkOGYxMC0zNDU3LTQwYmYtYTc2NS1iMTQ4YjEzMDIwNGMiLCJpYXQiOjE1ODk2ODMxMTYsImV4cCI6MTU4OTcwNDcxNn0.zwjhRHiVDkv_zJJhxI9DWCz71-w_10vi075Y0F9w6IA
 
 ###
 
-POST http://localhost:8000/api/login HTTP/1.1
+POST http://localhost:5000/api/login HTTP/1.1
 content-type: application/json
 
 {
@@ -13,7 +18,7 @@ content-type: application/json
 }
 
 ###
-POST http://localhost:8000/api/register HTTP/1.1
+POST http://localhost:5000/api/register HTTP/1.1
 content-type: application/json
 
 {
