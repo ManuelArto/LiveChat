@@ -1,11 +1,13 @@
+### LOCAL
+
 GET http://localhost:5000/private HTTP/1.1
 HEAD 
-x-access-tokens: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiI3NGNkOGYxMC0zNDU3LTQwYmYtYTc2NS1iMTQ4YjEzMDIwNGMiLCJpYXQiOjE1ODk2ODMxMTYsImV4cCI6MTU4OTcwNDcxNn0.zwjhRHiVDkv_zJJhxI9DWCz71-w_10vi075Y0F9w6IA
+x-access-tokens: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiI3NGNkOGYxMC0zNDU3LTQwYmYtYTc2NS1iMTQ4YjEzMDIwNGMiLCJ1c2VybmFtZSI6InVzZXIxMjMiLCJpYXQiOjE1ODk3MjYzNjQsImV4cCI6MTU4OTcyNjM3NH0.Hnc75H50cGTRy1NDRoWn3vz9fidoOf2X8rHV8x_5oFw
 
 ###
 POST http://localhost:5000/api/refresh-token HTTP/1.1
 HEAD 
-x-access-tokens: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiI3NGNkOGYxMC0zNDU3LTQwYmYtYTc2NS1iMTQ4YjEzMDIwNGMiLCJpYXQiOjE1ODk2ODMxMTYsImV4cCI6MTU4OTcwNDcxNn0.zwjhRHiVDkv_zJJhxI9DWCz71-w_10vi075Y0F9w6IA
+x-access-tokens: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiI3NGNkOGYxMC0zNDU3LTQwYmYtYTc2NS1iMTQ4YjEzMDIwNGMiLCJpYXQiOjE1ODk3MzMwODEsImV4cCI6MTU4OTczMzE0MX0.DzGGnQWmajsAK-xsZeCRRlPJ0174HhxtnwarFQPeB54
 
 ###
 
@@ -19,6 +21,37 @@ content-type: application/json
 
 ###
 POST http://localhost:5000/api/register HTTP/1.1
+content-type: application/json
+
+{
+	"email": "test2@gmail.com", 
+	"password": "passwordsicura",
+	"username": "user2"
+}
+
+###	PRODUCTION
+
+GET https://live-chat-fp.herokuapp.com/private HTTP/1.1
+HEAD 
+x-access-tokens: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiJjZGM3YjVmMS1kMmVlLTQ3NzctYjgzZS01M2U4YzMyZWViNTkiLCJ1c2VybmFtZSI6InVzZXIxMjM0IiwiaWF0IjoxNTg5NzA3MjAwLCJleHAiOjE1ODk3MDkwMDB9.R77BmyeeB1kaKD6phRBzl_8Q7dRzl3R20jMdw1dv87A
+
+###
+POST https://live-chat-fp.herokuapp.com/api/refresh-token HTTP/1.1
+HEAD 
+x-access-tokens: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiI3NGNkOGYxMC0zNDU3LTQwYmYtYTc2NS1iMTQ4YjEzMDIwNGMiLCJpYXQiOjE1ODk2ODMxMTYsImV4cCI6MTU4OTcwNDcxNn0.zwjhRHiVDkv_zJJhxI9DWCz71-w_10vi075Y0F9w6IA
+
+###
+
+POST https://live-chat-fp.herokuapp.com/api/login HTTP/1.1
+content-type: application/json
+
+{
+	"email": "test1@gmail.com", 
+	"password": "passwordsicura"
+}
+
+###
+POST https://live-chat-fp.herokuapp.com/api/register HTTP/1.1
 content-type: application/json
 
 {

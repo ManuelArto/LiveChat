@@ -1,4 +1,5 @@
 import 'package:LiveChatFrontend/providers/auth_provider.dart';
+import 'package:LiveChatFrontend/providers/chat_provider.dart';
 import 'package:LiveChatFrontend/screens/auth_screen.dart';
 import 'package:LiveChatFrontend/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,15 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => Auth(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => Auth(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ChatProvider(),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'LiveChat',

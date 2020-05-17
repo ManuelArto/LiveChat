@@ -16,6 +16,8 @@ class Auth with ChangeNotifier {
   String _userId;
   String _username;
 
+  String get username => _username;
+
   bool get isAuth {
     return token != null;
   }

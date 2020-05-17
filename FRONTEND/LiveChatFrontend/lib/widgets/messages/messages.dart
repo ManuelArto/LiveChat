@@ -1,26 +1,51 @@
+import 'package:LiveChatFrontend/providers/auth_provider.dart';
+import 'package:LiveChatFrontend/providers/chat_provider.dart';
 import 'package:LiveChatFrontend/widgets/messages/message_bubble.dart';
 import 'package:flutter/material.dart';
-import 'package:LiveChatFrontend/models/chats.dart';
+import 'package:provider/provider.dart';
 
-class Messages extends StatelessWidget {
+class Messages extends StatefulWidget {
   final String chatName;
 
   Messages(this.chatName);
 
   @override
+  _MessagesState createState() => _MessagesState();
+}
+
+class _MessagesState extends State<Messages> {
+  ScrollController _scrollController = ScrollController();
+  String username;
+
+  _scrollToBottom() {
+    _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+    username = Provider.of<Auth>(context, listen: false).username;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final messages = Chats.getMessages(chatName);
+    final messages = Provider.of<ChatProvider>(context).messages(widget.chatName);
     return ListView.builder(
-      reverse: true,
-      itemCount: messages?.length ?? 0,
-      itemBuilder: (context, index) => MessageBubble(
-        username: messages[index].sender,
-        isMe: false,
-        key: GlobalKey(),
-        message: messages[index].content,
-        imageUrL: messages[index].imageUrl,
-        time: messages[index].time,
-      ),
+      controller: _scrollController,
+      shrinkWrap: true,
+      itemCount: messages.length,
+      itemBuilder: (context, index) {
+        final message = messages[index];
+        return MessageBubble(
+          username: message.sender,
+          isMe: username == message.sender,
+          key: GlobalKey(),
+          message: message.content,
+          imageUrL: message.imageUrl,
+          time: message.time,
+        );
+      },
     );
   }
 }

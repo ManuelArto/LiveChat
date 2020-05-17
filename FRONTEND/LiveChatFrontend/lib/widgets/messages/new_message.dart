@@ -1,14 +1,33 @@
+import 'package:LiveChatFrontend/providers/auth_provider.dart';
+import 'package:LiveChatFrontend/providers/chat_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class NewMessage extends StatefulWidget {
+  final String chatName;
+
+  NewMessage(this.chatName);
+
   @override
   _NewMessageState createState() => _NewMessageState();
 }
 
 class _NewMessageState extends State<NewMessage> {
   final _controller = TextEditingController();
+  ChatProvider chatProvider;
+  String username;
 
-  void _sendMessage() {}
+  @override
+  void initState() {
+    super.initState();
+    chatProvider = Provider.of<ChatProvider>(context, listen: false);
+    username = Provider.of<Auth>(context, listen: false).username;
+  }
+
+  void _sendMessage() {
+    chatProvider.addMessage(_controller.text, username, widget.chatName);
+    _controller.text = "";
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -4,6 +4,9 @@ import datetime
 from functools import wraps
 import jwt
 
+EXP_TOKEN = datetime.timedelta(minutes=30)
+EXP_REFRESH_TOKEN = datetime.timedelta(hours=4)
+
 def token_required(f):
 	@wraps(f)
 	def decorator(*args, **kwargs):
@@ -22,18 +25,18 @@ def token_required(f):
 		return f(data, *args, **kwargs)
 	
 	return decorator
-
+	
 def generate_token(user):
 	return jwt.encode({
 		'uid': user.uid,
 		"username": user.username,
-		"iat": datetime.datetime.now(),
-		'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=30)},
-		app.config['SECRET_KEY']).decode()
+		"iat": datetime.datetime.utcnow(),
+		'exp': datetime.datetime.utcnow() + EXP_TOKEN},
+		app.config['SECRET_KEY']).decode(), EXP_TOKEN.seconds 
 
 def generate_refresh_token(user):
 	return jwt.encode({
 		'uid': user.uid,
-		"iat": datetime.datetime.now(),
-		'exp' : datetime.datetime.utcnow() + datetime.timedelta(hours=8)},
-		app.config['SECRET_KEY']).decode()
+		"iat": datetime.datetime.utcnow(),
+		'exp': datetime.datetime.utcnow() + EXP_REFRESH_TOKEN},
+		app.config['SECRET_KEY']).decode(), EXP_REFRESH_TOKEN.seconds

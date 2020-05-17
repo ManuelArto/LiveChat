@@ -1,24 +1,24 @@
+import 'package:LiveChatFrontend/providers/chat_provider.dart';
 import 'package:LiveChatFrontend/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChatsList extends StatelessWidget {
-  final List<String> chatsName;
-
-  ChatsList(this.chatsName);
 
   @override
   Widget build(BuildContext context) {
+    final chatNames = Provider.of<ChatProvider>(context, listen: false).chatNames;
     return ListView.builder(
-      itemCount: chatsName.length,
+      itemCount: chatNames.length,
       itemBuilder: (context, index) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: GestureDetector(
           onTap: () => Navigator.of(context)
-              .pushNamed(ChatScreen.routeName, arguments: chatsName[index]),
+              .pushNamed(ChatScreen.routeName, arguments: chatNames[index]),
           child: ListTile(
             leading: Icon(Icons.chat_bubble),
             title: Text(
-              chatsName[index],
+              chatNames[index],
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             subtitle: Text("Last messages."),

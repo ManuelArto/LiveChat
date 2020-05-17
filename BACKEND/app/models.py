@@ -1,5 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
+import datetime
 from . import db
 from .endpoint.jwt import generate_refresh_token, generate_token
 
@@ -25,4 +26,13 @@ class Users(db.Model):
 		return '<id {}>'.format(self.uid)
     
 	def serialize(self):
-		return {"user": {"uid": self.uid, "username":self.username, "token": generate_token(self), "refresh_token": generate_refresh_token(self)}}
+		refreshToken, expInRefreshToken = generate_refresh_token(self)
+		token, expInToken = generate_token(self)
+		return {
+			"uid": self.uid,
+			"username":self.username,
+			"token": token,
+			"refreshToken": refreshToken,
+			"expInToken": expInToken, 
+			"expInRefreshToken": expInRefreshToken
+			}

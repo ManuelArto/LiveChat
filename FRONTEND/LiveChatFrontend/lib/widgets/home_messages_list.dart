@@ -1,4 +1,3 @@
-import 'package:LiveChatFrontend/models/chats.dart';
 import 'package:LiveChatFrontend/models/sections.dart';
 import 'package:LiveChatFrontend/widgets/chats_list.dart';
 import 'package:flutter/material.dart';
@@ -103,7 +102,7 @@ class _MessagesListState extends State<MessagesList> {
               });
             },
             children: [
-              ChatsList(Chats.chatsName),
+              ChatsList(),
               Center(
                 child: Text("Groups"),
               ),
