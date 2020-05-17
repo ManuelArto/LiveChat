@@ -103,7 +103,7 @@ class _MessagesListState extends State<MessagesList> {
               });
             },
             children: [
-              ChatsList(Chats.chats),
+              ChatsList(Chats.chatsName),
               Center(
                 child: Text("Groups"),
               ),

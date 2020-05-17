@@ -5,23 +5,23 @@ import 'package:image_picker/image_picker.dart';
 
 class UserImagePicker extends StatefulWidget {
   final Function imagePickFn;
-  UserImagePicker(this.imagePickFn);
+  File _pickedImage;
+  UserImagePicker(this.imagePickFn, this._pickedImage);
 
   @override
   _UserImagePickerState createState() => _UserImagePickerState();
 }
 
 class _UserImagePickerState extends State<UserImagePicker> {
-  File _pickedImage = null;
 
   void _pickImage() async {
     final ImageSource imageSource = await _showDialog();
     if (imageSource != null) {
       final image = await ImagePicker.pickImage(source: imageSource);
       setState(() {
-        _pickedImage = image;
+        widget._pickedImage = image;
       });
-      widget.imagePickFn(_pickedImage);
+      widget.imagePickFn(widget._pickedImage);
     }
   }
 
@@ -32,9 +32,9 @@ class _UserImagePickerState extends State<UserImagePicker> {
         CircleAvatar(
           radius: 40,
           backgroundImage:
-              _pickedImage != null ? FileImage(_pickedImage) : null,
+              widget._pickedImage != null ? FileImage(widget._pickedImage) : null,
           child: Text(
-            _pickedImage != null ? "" : "Select\nimage",
+            widget._pickedImage != null ? "" : "Select\nimage",
           ),
         ),
         FlatButton.icon(

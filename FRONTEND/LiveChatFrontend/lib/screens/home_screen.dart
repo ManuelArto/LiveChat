@@ -1,14 +1,17 @@
+import 'package:LiveChatFrontend/providers/auth_provider.dart';
 import 'package:LiveChatFrontend/widgets/gradient_background.dart';
 import 'package:flutter/material.dart';
 
 import 'package:LiveChatFrontend/widgets/active_users.dart';
 import 'package:LiveChatFrontend/widgets/home_messages_list.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = "/";
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<Auth>(context, listen: false);
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(
@@ -19,7 +22,7 @@ class HomeScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  margin: const EdgeInsets.only(left: 30, top: 10.0),
+                  margin: const EdgeInsets.only(left: 30, top: 30.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -34,7 +37,7 @@ class HomeScreen extends StatelessWidget {
                       IconButton(
                         alignment: Alignment.center,
                         icon: Icon(Icons.exit_to_app, size: 30),
-                        onPressed: () {},
+                        onPressed: auth.logout,
                         color: Colors.white,
                       )
                     ],

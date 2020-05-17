@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:LiveChatFrontend/providers/auth_provider.dart';
 import 'package:LiveChatFrontend/widgets/auth/user_image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class AuthForm extends StatefulWidget {
   const AuthForm({
@@ -13,109 +15,154 @@ class AuthForm extends StatefulWidget {
   _AuthFormState createState() => _AuthFormState();
 }
 
-class _AuthFormState extends State<AuthForm> {
+class _AuthFormState extends State<AuthForm>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
+  final _passwordController = TextEditingController();
   var _isLogin = true;
   var _isLoading = false;
-  Map<String, dynamic> formData = {
+  Map<String, dynamic> _authData = {
     "email": "",
     "username": "",
     "password": "",
     "imageFile": null,
   };
 
-  Future<void> _submitForm(Map<String, dynamic> formData) async {
-  }
-
-  void _trySubmit() {
+  Future<void> _submitForm() async {
     FocusScope.of(context).unfocus();
-    if (!_isLogin && formData["imageFile"] == null) {
+    // if (!_isLogin && _authData["imageFile"] == null) {
+    //   Scaffold.of(context).showSnackBar(SnackBar(
+    //     content: Text("Please pick an Image"),
+    //     backgroundColor: Theme.of(context).errorColor,
+    //   ));
+    //   return;
+    // }
+    if (!_formKey.currentState.validate()) return;
+    _formKey.currentState.save();
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      if (_isLogin) {
+        await Provider.of<Auth>(context, listen: false).signin(
+          _authData["email"],
+          _authData["password"],
+        );
+      } else {
+        await Provider.of<Auth>(context, listen: false).signup(
+          _authData["email"],
+          _authData["username"],
+          _authData["password"],
+        );
+      }
+    } catch (error) {
+      Scaffold.of(context).hideCurrentSnackBar();
       Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text("Please pick an Image"),
-        backgroundColor: Theme.of(context).errorColor,
+        content: Text(error.toString()),
       ));
-      return;
     }
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
-      _submitForm(formData);
-    }
-  }
-
-  void _register(Map<String, dynamic> formData) async {
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void _pickedImage(File image) {
-    formData["imageFile"] = image;
+    _authData["imageFile"] = image;
   }
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Card(
-        elevation: 20.0,
-        margin: const EdgeInsets.all(20.0),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                if (!_isLogin) UserImagePicker(_pickedImage),
-                TextFormField(
-                  autocorrect: false,
-                  textCapitalization: TextCapitalization.none,
-                  enableSuggestions: false,
-                  key: ValueKey("email"),
-                  onSaved: (newValue) => formData["email"] = newValue.trim(),
-                  validator: (value) => (value.isEmpty || !value.contains("@"))
-                      ? "Please enter a valide email"
-                      : null,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(labelText: "Email address"),
-                ),
-                if (!_isLogin)
-                  TextFormField(
-                    autocorrect: false,
-                    textCapitalization: TextCapitalization.words,
-                    enableSuggestions: false,
-                    key: ValueKey("username"),
-                    onSaved: (newValue) =>
-                        formData["username"] = newValue.trim(),
-                    validator: (value) => (value.isEmpty || value.length < 7)
-                        ? "Password must be at least 7 characters long"
-                        : null,
-                    decoration: InputDecoration(labelText: "Username"),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            elevation: 10.0,
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Form(
+                key: _formKey,
+                child: AnimatedSize(
+                  vsync: this,
+                  duration: Duration(milliseconds: 500),
+                  curve: Curves.ease,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      if (!_isLogin)
+                        UserImagePicker(_pickedImage, _authData["imageFile"]),
+                      if (!_isLogin)
+                        TextFormField(
+                          autocorrect: false,
+                          textCapitalization: TextCapitalization.words,
+                          enableSuggestions: false,
+                          key: ValueKey("username"),
+                          onSaved: (newValue) =>
+                              _authData["username"] = newValue.trim(),
+                          validator: (value) => (value.isEmpty || value.length < 7)
+                              ? "Password must be at least 7 characters long"
+                              : null,
+                          decoration: InputDecoration(labelText: "Username"),
+                        ),
+                      TextFormField(
+                        autocorrect: false,
+                        textCapitalization: TextCapitalization.none,
+                        enableSuggestions: false,
+                        key: ValueKey("email"),
+                        onSaved: (newValue) => _authData["email"] = newValue.trim(),
+                        validator: (value) =>
+                            (value.isEmpty || !value.contains("@"))
+                                ? "Please enter a valide email"
+                                : null,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(labelText: "Email address"),
+                      ),
+                      TextFormField(
+                        controller: _passwordController,
+                        key: ValueKey("password"),
+                        onSaved: (newValue) =>
+                            _authData["password"] = newValue.trim(),
+                        validator: (value) => (value.isEmpty || value.length < 4)
+                            ? "Please enter at least 4 characters"
+                            : null,
+                        decoration: InputDecoration(labelText: "Password"),
+                        obscureText: true,
+                      ),
+                      if (!_isLogin)
+                        TextFormField(
+                          key: ValueKey("Confirm password"),
+                          validator: (value) => (value != _passwordController.text)
+                              ? "Password doesn't match"
+                              : null,
+                          decoration:
+                              InputDecoration(labelText: "Confirm password"),
+                          obscureText: true,
+                        ),
+                      SizedBox(
+                        height: 12,
+                      ),
+                      if (!_isLoading)
+                        RaisedButton(
+                          color: Theme.of(context).accentColor.withOpacity(0.8),
+                          child: Text(_isLogin ? "Login" : "SignUp"),
+                          onPressed: _submitForm,
+                        ),
+                      if (!_isLoading)
+                        FlatButton(
+                          child: Text(_isLogin
+                              ? "Create new Account"
+                              : "I already have an account"),
+                          onPressed: () => setState(() => _isLogin = !_isLogin),
+                        ),
+                      if (_isLoading)
+                        Center(heightFactor: 3, child: CircularProgressIndicator()),
+                    ],
                   ),
-                TextFormField(
-                  key: ValueKey("password"),
-                  onSaved: (newValue) => formData["password"] = newValue.trim(),
-                  validator: (value) => (value.isEmpty || value.length < 4)
-                      ? "Please enter at least 4 characters"
-                      : null,
-                  decoration: InputDecoration(labelText: "Password"),
-                  obscureText: true,
                 ),
-                SizedBox(
-                  height: 12,
-                ),
-                if (!_isLoading)
-                  RaisedButton(
-                    child: Text(_isLogin ? "Login" : "SignUp"),
-                    onPressed: _trySubmit,
-                  ),
-                if (!_isLoading)
-                  FlatButton(
-                    textColor: Theme.of(context).primaryColor,
-                    child: Text(_isLogin
-                        ? "Create new Account"
-                        : "I already have an account"),
-                    onPressed: () => setState(() => _isLogin = !_isLogin),
-                  ),
-                if (_isLoading)
-                  Center(heightFactor: 3, child: CircularProgressIndicator()),
-              ],
+              ),
             ),
           ),
         ),
