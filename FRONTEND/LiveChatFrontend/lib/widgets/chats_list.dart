@@ -1,4 +1,4 @@
-import 'package:LiveChatFrontend/providers/chat_provider.dart';
+import 'package:LiveChatFrontend/providers/socket_provider.dart';
 import 'package:LiveChatFrontend/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,7 +7,7 @@ class ChatsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final chatNames = Provider.of<ChatProvider>(context, listen: false).chatNames;
+    final chatNames = Provider.of<SocketProvider>(context, listen: false).chatNames;
     return ListView.builder(
       itemCount: chatNames.length,
       itemBuilder: (context, index) => Padding(

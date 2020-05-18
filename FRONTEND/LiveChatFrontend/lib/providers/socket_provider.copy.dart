@@ -7,7 +7,7 @@ import 'package:LiveChatFrontend/providers/auth_provider.dart';
 import 'package:LiveChatFrontend/models/message.dart';
 import '../constants.dart';
 
-class ChatProvider with ChangeNotifier {
+class SocketProvider with ChangeNotifier {
   Auth auth;
   Map<String, List<Message>> _messages = {"GLOBAL": []};
   Socket _socketIO;

@@ -1,5 +1,5 @@
 import 'package:LiveChatFrontend/providers/auth_provider.dart';
-import 'package:LiveChatFrontend/providers/chat_provider.dart';
+import 'package:LiveChatFrontend/providers/socket_provider.dart';
 import 'package:LiveChatFrontend/widgets/messages/message_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +30,7 @@ class _MessagesState extends State<Messages> {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
-    final messages = Provider.of<ChatProvider>(context).messages(widget.chatName);
+    final messages = Provider.of<SocketProvider>(context).messages(widget.chatName);
     return ListView.builder(
       controller: _scrollController,
       shrinkWrap: true,

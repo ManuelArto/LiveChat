@@ -1,25 +1,22 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:socket_io_client/socket_io_client.dart';
+import 'package:flutter_socket_io/flutter_socket_io.dart';
 
 import 'package:LiveChatFrontend/providers/auth_provider.dart';
 import 'package:LiveChatFrontend/models/message.dart';
+import 'package:flutter_socket_io/socket_io_manager.dart';
 import '../constants.dart';
 
-class ChatProvider with ChangeNotifier {
+class SocketProvider with ChangeNotifier {
   Auth auth;
   Map<String, List<Message>> _messages = {"GLOBAL": []};
-  Socket _socketIO;
+  SocketIO _socketIO;
 
   void init() {
-    _socketIO = io('$URL_SOCKETIO/socketio', <String, dynamic>{
-      'transports': ['websocket'],
-      'extraHeaders': {"token": auth.token} // optional
-    });
-    _socketIO.on("connect", (_) => print('Connected'));
-    _socketIO.on("disconnect", (_) => print('Disconnected'));
-    _socketIO.on('receive_message', receiveMessage);
+    _socketIO = SocketIOManager().createSocketIO(URL_SOCKETIO, "/socketio", query: "token=${auth.token}");
+    _socketIO.subscribe('receive_message', receiveMessage);
+    _socketIO.connect();
   }
 
   void receiveMessage(jsonData) {
@@ -32,7 +29,7 @@ class ChatProvider with ChangeNotifier {
       "message": message,
       "receiver": receiver,
     });
-    _socketIO.emit("send_message", data);
+    _socketIO.sendMessage("send_message", data);
     addMessage(message, auth.username, receiver);
   }
 

@@ -1,5 +1,5 @@
 import 'package:LiveChatFrontend/providers/auth_provider.dart';
-import 'package:LiveChatFrontend/providers/chat_provider.dart';
+import 'package:LiveChatFrontend/providers/socket_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,13 +14,13 @@ class NewMessage extends StatefulWidget {
 
 class _NewMessageState extends State<NewMessage> {
   final _controller = TextEditingController();
-  ChatProvider chatProvider;
+  SocketProvider chatProvider;
   String username;
 
   @override
   void initState() {
     super.initState();
-    chatProvider = Provider.of<ChatProvider>(context, listen: false);
+    chatProvider = Provider.of<SocketProvider>(context, listen: false);
     username = Provider.of<Auth>(context, listen: false).username;
   }
 

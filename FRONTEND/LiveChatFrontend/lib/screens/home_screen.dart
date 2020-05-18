@@ -3,7 +3,7 @@ import 'package:LiveChatFrontend/widgets/gradient_background.dart';
 import 'package:flutter/material.dart';
 
 import 'package:LiveChatFrontend/widgets/active_users.dart';
-import 'package:LiveChatFrontend/widgets/home_messages_list.dart';
+import 'package:LiveChatFrontend/widgets/home_chats_list.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {

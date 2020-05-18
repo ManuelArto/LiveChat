@@ -1,5 +1,5 @@
 import 'package:LiveChatFrontend/providers/auth_provider.dart';
-import 'package:LiveChatFrontend/providers/chat_provider.dart';
+import 'package:LiveChatFrontend/providers/socket_provider.dart';
 import 'package:LiveChatFrontend/screens/auth_screen.dart';
 import 'package:LiveChatFrontend/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
@@ -18,9 +18,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => Auth(),
         ),
-        ChangeNotifierProxyProvider<Auth, ChatProvider>(
+        ChangeNotifierProxyProvider<Auth, SocketProvider>(
           update: (context, auth, chatProvider) => chatProvider..update(auth),
-          create: (context) => ChatProvider(),
+          create: (context) => SocketProvider(),
         ),
       ],
       child: MaterialApp(
