@@ -2,19 +2,19 @@ from flask_socketio import emit, send
 from flask import request
 import json
 from .. import socketio
-from .jwt import get_username
+from .jwt import get_username, token_required
 
 socket_clients = {}
 
 @socketio.on("connect", namespace="/socketio")
-def handle_connect():
-	print(request.args)
-	token = request.args.get("token")
-	username = get_username(token)
+@token_required
+def handle_connect(token_data):
+	username = token_data["username"]
 	print(f"[NEW USER] {username}")
 
 @socketio.on('send_message', namespace='/socketio')
 def handle_msg(json_data):
+	print("received")
 	json_data = json.loads(json_data)
 	data = {"sender": get_username(json_data["token"]), "receiver": json_data["receiver"], "message": json_data["message"]}
 	emit('receive_message', data, broadcast=True, include_self=False)

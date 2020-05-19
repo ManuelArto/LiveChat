@@ -30,6 +30,7 @@ dependencies:
   provider: ^4.1.2
   flutter_socket_io: ^0.6.0
   socket_io_client: ^0.9.10
+  adhara_socket_io: ^0.4.1
 
 
   # The following adds the Cupertino Icons font to your application.

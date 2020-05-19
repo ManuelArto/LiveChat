@@ -6,14 +6,14 @@ from flask_cors import CORS
 app = Flask(__name__)
 app.config.from_pyfile("config.py")
 
-CORS(app)
-
 db = SQLAlchemy(app)
 
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 from .endpoint import api
 from .endpoint import websocket
+
+CORS(app)
 
 if __name__ == "__main__":
 	socketio.run(app)
