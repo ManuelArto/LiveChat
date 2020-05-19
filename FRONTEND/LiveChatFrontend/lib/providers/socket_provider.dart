@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:LiveChatFrontend/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -8,26 +9,69 @@ import 'package:LiveChatFrontend/models/message.dart';
 import '../constants.dart';
 
 class SocketProvider with ChangeNotifier {
-  Auth auth;
-  Map<String, List<Message>> _messages = {"GLOBAL": []};
   Socket _socketIO;
+  Auth auth;
+  Map<String, User> _users;
+  Map<String, List<Message>> _messages;
+
+  SocketProvider() {
+    _users = {};
+    _messages = {"GLOBAL": []};
+  }
 
   void init() {
     _socketIO = io('$URL_SOCKETIO/socketio', <String, dynamic>{
-      'transports': ['websocket'],
-      'query': "token=${auth.token}" // optional
+      'transports': ['websocket', "polling"],
+      'query': "token=${auth.token}"
     });
-    _socketIO.on("connect", (_) => print('Connected'));
-    _socketIO.on("disconnect", (_) => print('Disconnected'));
-    _socketIO.on('receive_message', receiveMessage);
+    _initListener();
   }
 
-  void receiveMessage(jsonData) {
-    addMessage(jsonData["message"], jsonData["sender"], jsonData["receiver"]);
+  void _initListener() {
+    _socketIO.on("connect", (_) => print('Connected'));
+    _socketIO.on("disconnect", (_) => print('Disconnected'));
+    _socketIO.on('receive_message', _receiveMessage);
+    _socketIO.on("user_connected", _userConnected);
+    _socketIO.on("user_disconnecred", _userDisconnected);
+  }
+
+  void _receiveMessage(jsonData) {
+    print("RECEIVED MESSAGE $jsonData");
+    addMessage(
+      jsonData["message"],
+      jsonData["sender"],
+      auth.username == jsonData["receiver"]
+          ? jsonData["sender"]
+          : jsonData["receiver"],
+    );
+  }
+
+  void _userConnected(jsonData) {
+    print("UPDATE USERS CONNECTED");
+    jsonData.forEach((username, data) {
+      if (username != auth.username) {
+        if (!_users.containsKey(username)) {
+          _users[username] = User(
+            username: username,
+            imageUrl: data["imageUrl"],
+            isOnline: true,
+          );
+          _messages[username] = [];
+        } else
+          _users[username].isOnline = true;
+      }
+    });
+    notifyListeners();
+  }
+
+  void _userDisconnected(jsonData) {
+    print("${jsonData['username']} DISCONNECTED");
+    _users[jsonData["username"]].isOnline = false;
+    notifyListeners();
   }
 
   void sendMessage(String message, String receiver) {
-    print("sending");
+    print("Sending $message to $receiver");
     final data = json.encode({
       "token": auth.token,
       "message": message,
@@ -37,16 +81,18 @@ class SocketProvider with ChangeNotifier {
     addMessage(message, auth.username, receiver);
   }
 
-  void update(Auth auth) {
-    this.auth = auth;
-    if (_socketIO == null) {
-      init();
-    }
+  void destroy() {
+    print("Destroying");
+    _socketIO.destroy();
+    SocketProvider();
   }
 
-  void destroy() {
-    _socketIO.destroy();
+  void update(Auth auth) {
+    this.auth = auth;
+    auth.disconncect = destroy;
   }
+
+  // Messages
 
   List<Message> messages(String chatName) => _messages[chatName];
 
@@ -58,4 +104,12 @@ class SocketProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Users
+
+  List<User> get onlineUsers =>
+      _users.values.where((user) => user.isOnline).toList();
+
+  User getUser(String name) {
+    return _users[name];
+  }
 }

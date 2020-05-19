@@ -1,4 +1,5 @@
 import 'package:LiveChatFrontend/providers/auth_provider.dart';
+import 'package:LiveChatFrontend/providers/socket_provider.dart';
 import 'package:LiveChatFrontend/widgets/gradient_background.dart';
 import 'package:flutter/material.dart';
 
@@ -34,12 +35,23 @@ class HomeScreen extends StatelessWidget {
                           color: Colors.white,
                         ),
                       ),
-                      IconButton(
-                        alignment: Alignment.center,
-                        icon: Icon(Icons.exit_to_app, size: 30),
-                        onPressed: auth.logout,
-                        color: Colors.white,
-                      )
+                      PopupMenuButton<String>(
+                        icon: Icon(
+                          Icons.more_vert,
+                          size: 35,
+                          color: Colors.white70,
+                        ),
+                        itemBuilder: (BuildContext context) => [
+                          PopupMenuItem<String>(
+                            value: "logout",
+                            child: ListTile(
+                              trailing: Text("Logout"),
+                              title: Icon(Icons.exit_to_app, size: 30),
+                            ),
+                          )
+                        ],
+                        onSelected: (value) => auth.logout(),
+                      ),
                     ],
                   ),
                 ),

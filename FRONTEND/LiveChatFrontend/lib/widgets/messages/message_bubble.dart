@@ -30,7 +30,7 @@ class MessageBubble extends StatelessWidget {
               constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width * 0.5),
               decoration: BoxDecoration(
-                color: isMe ? Colors.grey[300] : Colors.green,
+                color: isMe ? Colors.green: Colors.grey[300],
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
@@ -51,7 +51,7 @@ class MessageBubble extends StatelessWidget {
                       username,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: isMe ? Colors.black : Colors.grey[900],
+                        color: isMe ? Colors.black: Colors.grey[900],
                       ),
                     ),
                   ),
@@ -59,7 +59,7 @@ class MessageBubble extends StatelessWidget {
                   Text(
                     message,
                     style: TextStyle(
-                      color: isMe ? Colors.black : Colors.white,
+                      color: isMe ? Colors.white : Colors.black,
                     ),
                     textAlign: TextAlign.justify,
                   ),

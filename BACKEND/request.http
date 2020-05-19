@@ -2,7 +2,7 @@
 
 GET http://localhost:5000/private HTTP/1.1
 HEAD 
-x-access-tokens: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiI3NGNkOGYxMC0zNDU3LTQwYmYtYTc2NS1iMTQ4YjEzMDIwNGMiLCJ1c2VybmFtZSI6InVzZXIxMjMiLCJpYXQiOjE1ODk3MjYzNjQsImV4cCI6MTU4OTcyNjM3NH0.Hnc75H50cGTRy1NDRoWn3vz9fidoOf2X8rHV8x_5oFw
+x-access-tokens: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiI2OWY0NTc2ZS1lYTcxLTRmMDAtOTY0Mi04YjdkYzdhZGMxYzMiLCJ1c2VybmFtZSI6ImRldmljZXRlc3QiLCJpYXQiOjE1ODk5MDU5NDgsImV4cCI6MTU4OTkwNzc0OH0.xdGQtJQS7rY3_lFIBGUKC1R8aPaqwPaWKy2Hw41CGaM
 
 ###
 POST http://localhost:5000/api/refresh-token HTTP/1.1
@@ -15,7 +15,7 @@ POST http://localhost:5000/api/login HTTP/1.1
 content-type: application/json
 
 {
-	"email": "device@test.com", 
+	"email": "web@test.com", 
 	"password": "ciaociao"
 }
 

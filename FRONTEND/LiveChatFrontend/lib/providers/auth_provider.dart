@@ -10,11 +10,12 @@ import '../constants.dart';
 
 class Auth with ChangeNotifier {
   String _token;
-  String _refreshToken;
+  String refreshToken;
   DateTime _expToken;
   DateTime _expRefreshToken;
   String _userId;
   String _username;
+  Function disconncect;
 
   String get username => _username;
 
@@ -29,6 +30,8 @@ class Auth with ChangeNotifier {
     }
   }
 
+  set token(String newToken) => _token = newToken;
+
   String get userId {
     return _userId;
   }
@@ -36,12 +39,13 @@ class Auth with ChangeNotifier {
   Future<void> logout() async {
     _token = null;
     _userId = null;
-    _refreshToken = null;
+    refreshToken = null;
     _username = null;
     _expRefreshToken = null;
     _expToken = null;
     final prefs = await SharedPreferences.getInstance();
     prefs.clear();
+    disconncect();
     notifyListeners();
   }
 
@@ -53,7 +57,7 @@ class Auth with ChangeNotifier {
     _expRefreshToken = DateTime.parse(userData["expInToken"]);
     _userId = userData["userId"];
     _token = userData["token"];
-    _refreshToken = userData["refreshToken"];
+    refreshToken = userData["refreshToken"];
     _username = userData["username"];
     if (!isAuth) return false;
     _autoRefresh();
@@ -65,7 +69,7 @@ class Auth with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     final userData = json.encode({
       "token": _token,
-      "refreshToken": _refreshToken,
+      "refreshToken": refreshToken,
       "userId": _userId,
       "username": _username,
       "expInRefreshToken": _expRefreshToken.toIso8601String(),
@@ -108,7 +112,7 @@ class Auth with ChangeNotifier {
     while (true) {
       try {
         final response = await http.post(URL_AUTH_REFRESH_TOKEN,
-            headers: {"x-access-tokens": _refreshToken});
+            headers: {"x-access-tokens": refreshToken});
         final responseData = json.decode(response.body) as Map<String, dynamic>;
         if (responseData.containsKey("error")) {
           logout();
@@ -124,7 +128,7 @@ class Auth with ChangeNotifier {
 
   void saveData(Map<String, dynamic> responseData) {
     _token = responseData["token"];
-    _refreshToken = responseData["refreshToken"];
+    refreshToken = responseData["refreshToken"];
     _username = responseData["username"];
     _userId = responseData["uid"];
     _expToken =

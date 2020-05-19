@@ -3,5 +3,5 @@ class User {
   final String imageUrl;
   bool isOnline;
 
-  User(this.username, this.imageUrl, [this.isOnline = false]);
+  User({this.username, this.imageUrl, this.isOnline = false});
 }

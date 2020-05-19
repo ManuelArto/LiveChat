@@ -1,8 +1,9 @@
-import 'package:LiveChatFrontend/models/users.dart';
+import 'package:LiveChatFrontend/providers/socket_provider.dart';
 import 'package:LiveChatFrontend/widgets/messages/messages.dart';
 import 'package:LiveChatFrontend/widgets/messages/new_message.dart';
 import 'package:LiveChatFrontend/widgets/profile_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
   static const routeName = "/chatScreen";
@@ -18,8 +19,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final index = Users.users.indexWhere((user) => user.username == widget.chatName);
-    final user = index != -1 ? Users.users[index] : null;
+    final user = Provider.of<SocketProvider>(context, listen: false).getUser(widget.chatName);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).accentColor.withOpacity(0.6),

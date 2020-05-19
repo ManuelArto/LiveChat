@@ -7,7 +7,7 @@ class ChatsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final chatNames = Provider.of<SocketProvider>(context, listen: false).chatNames;
+    final chatNames = Provider.of<SocketProvider>(context).chatNames;
     return ListView.builder(
       itemCount: chatNames.length,
       itemBuilder: (context, index) => Padding(

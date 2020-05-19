@@ -1,6 +1,8 @@
 import 'package:LiveChatFrontend/models/sections.dart';
+import 'package:LiveChatFrontend/providers/socket_provider.dart';
 import 'package:LiveChatFrontend/widgets/chats_list.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MessagesList extends StatefulWidget {
   const MessagesList({
@@ -17,6 +19,12 @@ class MessagesList extends StatefulWidget {
 class _MessagesListState extends State<MessagesList> {
   final PageController _pageController = PageController(initialPage: 0);
   int _currentSection = 0;
+
+  @override
+  void initState() { 
+    super.initState();
+    Provider.of<SocketProvider>(context, listen: false).init();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +51,7 @@ class _MessagesListState extends State<MessagesList> {
                         value: section,
                         child: Row(
                           children: [
-                            Text(section + "  "),
+                            Text(section),
                             if (_currentSection == Sections.getIndex(section))
                               CircleAvatar(
                                 backgroundColor: Theme.of(context).accentColor,

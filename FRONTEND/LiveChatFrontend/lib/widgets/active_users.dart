@@ -1,7 +1,8 @@
-import 'package:LiveChatFrontend/models/users.dart';
+import 'package:LiveChatFrontend/providers/socket_provider.dart';
 import 'package:LiveChatFrontend/screens/chat_screen.dart';
 import 'package:LiveChatFrontend/widgets/profile_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ActiveUsers extends StatelessWidget {
   final screenSize;
@@ -10,13 +11,20 @@ class ActiveUsers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeUsers = Users.users.where((user) => user.isOnline).toList();
+    final activeUsers = Provider.of<SocketProvider>(context).onlineUsers;
     return Container(
       margin: const EdgeInsets.only(left: 30.0, top: 5),
       height: screenSize.height * 0.12,
       alignment: Alignment.centerLeft,
       child: activeUsers.length == 0
-          ? Text("No active users", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),)
+          ? Text(
+              "No active users",
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[300],
+              ),
+            )
           : ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: activeUsers.length,
