@@ -36,7 +36,7 @@ def signup():
 	except Exception as e:
 		return jsonify({"error": str(e)})
 
-	return jsonify(new_user.serialize())
+	return jsonify(new_user.serialize()), 201
 
 @app.route("/api/refresh-token", methods=["POST"])
 @token_required

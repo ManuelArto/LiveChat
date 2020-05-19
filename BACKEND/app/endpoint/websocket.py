@@ -18,8 +18,8 @@ def handle_connect():
 
 @socketio.on('disconnect', namespace='/socketio')
 def handle_disconnect():
-	username = get_username(request.args.get("token"))	
-	if username in socket_clients.keys:
+	username = get_username(request.args.get("token"))
+	if username in socket_clients:
 		del socket_clients[username]
 	leave_room(username)
 	print(f'[USER DISCONNECTED] {username}')

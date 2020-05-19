@@ -25,6 +25,8 @@ class SocketProvider with ChangeNotifier {
       'query': "token=${auth.token}"
     });
     _initListener();
+    SocketProvider();
+    // TODO: refresh users & reset messages se nuovo nome in _users
   }
 
   void _initListener() {

@@ -55,7 +55,7 @@ POST https://live-chat-fp.herokuapp.com/api/register HTTP/1.1
 content-type: application/json
 
 {
-	"email": "test1@gmail.com", 
-	"password": "passwordsicura",
-	"username": "user1234"
+	"email": "device@test.com", 
+	"password": "ciaociao",
+	"username": "devicetest"
 }
