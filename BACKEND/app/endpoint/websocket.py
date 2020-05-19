@@ -7,9 +7,8 @@ from .jwt import get_username, token_required
 socket_clients = {}
 
 @socketio.on("connect", namespace="/socketio")
-@token_required
-def handle_connect(token_data):
-	username = token_data["username"]
+def handle_connect():
+	username = get_username(request.args.get("token"))
 	print(f"[NEW USER] {username}")
 
 @socketio.on('send_message', namespace='/socketio')
@@ -21,4 +20,4 @@ def handle_msg(json_data):
 
 @socketio.on('disconnect', namespace='/socketio')
 def disconnect():
-	print('Client disconnected') 
+	print('Client disconnected')

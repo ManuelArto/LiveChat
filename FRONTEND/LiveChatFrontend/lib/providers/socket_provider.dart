@@ -15,7 +15,7 @@ class SocketProvider with ChangeNotifier {
   void init() {
     _socketIO = io('$URL_SOCKETIO/socketio', <String, dynamic>{
       'transports': ['websocket'],
-      'extraHeaders': {"x-access-tokens": "${auth.token}asd"} // optional
+      'query': "token=${auth.token}" // optional
     });
     _socketIO.on("connect", (_) => print('Connected'));
     _socketIO.on("disconnect", (_) => print('Disconnected'));
