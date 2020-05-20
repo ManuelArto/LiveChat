@@ -36,19 +36,6 @@ class Auth with ChangeNotifier {
     return _userId;
   }
 
-  Future<void> logout() async {
-    _token = null;
-    _userId = null;
-    refreshToken = null;
-    _username = null;
-    _expRefreshToken = null;
-    _expToken = null;
-    final prefs = await SharedPreferences.getInstance();
-    prefs.clear();
-    disconncect();
-    notifyListeners();
-  }
-
   Future<bool> tryAutoLogin() async {
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey("userData")) return false;
@@ -63,19 +50,6 @@ class Auth with ChangeNotifier {
     _autoRefresh();
     notifyListeners();
     return true;
-  }
-
-  Future<void> storeValues() async {
-    final prefs = await SharedPreferences.getInstance();
-    final userData = json.encode({
-      "token": _token,
-      "refreshToken": refreshToken,
-      "userId": _userId,
-      "username": _username,
-      "expInRefreshToken": _expRefreshToken.toIso8601String(),
-      "expInToken": _expToken.toIso8601String()
-    });
-    prefs.setString("userData", userData);
   }
 
   Future<void> signup(String email, String username, String password) async {
@@ -126,6 +100,19 @@ class Auth with ChangeNotifier {
     }
   }
 
+  Future<void> logout() async {
+    _token = null;
+    _userId = null;
+    refreshToken = null;
+    _username = null;
+    _expRefreshToken = null;
+    _expToken = null;
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    disconncect();
+    notifyListeners();
+  }
+
   void saveData(Map<String, dynamic> responseData) {
     _token = responseData["token"];
     refreshToken = responseData["refreshToken"];
@@ -138,6 +125,19 @@ class Auth with ChangeNotifier {
     _autoRefresh();
     storeValues();
     notifyListeners();
+  }
+
+  Future<void> storeValues() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userData = json.encode({
+      "token": _token,
+      "refreshToken": refreshToken,
+      "userId": _userId,
+      "username": _username,
+      "expInRefreshToken": _expRefreshToken.toIso8601String(),
+      "expInToken": _expToken.toIso8601String()
+    });
+    prefs.setString("userData", userData);
   }
 
   void _autoRefresh() {

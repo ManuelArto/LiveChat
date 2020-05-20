@@ -30,7 +30,8 @@ class _MessagesState extends State<Messages> {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
-    final messages = Provider.of<SocketProvider>(context).messages(widget.chatName);
+    final socketProvider = Provider.of<SocketProvider>(context);
+    final messages = socketProvider.messages(widget.chatName);
     return ListView.builder(
       controller: _scrollController,
       shrinkWrap: true,
@@ -40,9 +41,9 @@ class _MessagesState extends State<Messages> {
         return MessageBubble(
           username: message.sender,
           isMe: username == message.sender,
-          key: GlobalKey(),
+          key: ValueKey(message.id),
           message: message.content,
-          imageUrL: message.imageUrl,
+          imageUrL: socketProvider.getImageUrl(message.sender),
           time: message.time,
         );
       },

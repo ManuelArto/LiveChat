@@ -1,11 +1,13 @@
 import 'dart:convert';
 
+import 'package:LiveChatFrontend/helpers/db_helper.dart';
 import 'package:LiveChatFrontend/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 import 'package:LiveChatFrontend/providers/auth_provider.dart';
 import 'package:LiveChatFrontend/models/message.dart';
+import 'package:uuid/uuid.dart';
 import '../constants.dart';
 
 class SocketProvider with ChangeNotifier {
@@ -19,14 +21,14 @@ class SocketProvider with ChangeNotifier {
     _messages = {"GLOBAL": []};
   }
 
-  void init() {
+  Future<void> init() async {
+    print("INIT");
+    if (!identical(0.0, 0)) await getFromMemory();
     _socketIO = io('$URL_SOCKETIO/socketio', <String, dynamic>{
       'transports': ['websocket', "polling"],
       'query': "token=${auth.token}"
     });
     _initListener();
-    SocketProvider();
-    // TODO: refresh users & reset messages se nuovo nome in _users
   }
 
   void _initListener() {
@@ -58,6 +60,7 @@ class SocketProvider with ChangeNotifier {
             imageUrl: data["imageUrl"],
             isOnline: true,
           );
+          storeInMemory("USERS", _users[username].toJson());
           _messages[username] = [];
         } else
           _users[username].isOnline = true;
@@ -94,6 +97,27 @@ class SocketProvider with ChangeNotifier {
     auth.disconncect = destroy;
   }
 
+  // persistentData
+
+  Future<void> getFromMemory() async {
+    print("FETCHING FROM MEMORY");
+    final usersList = await DBHelper.getData(auth.userId, "USERS");
+    usersList.forEach((data) {
+      _users[data["username"]] = User.fromJson(data);
+    });
+    final messagesList = await DBHelper.getData(auth.userId, "MESSAGES");
+    messagesList.forEach((data) {
+      if (!_messages.containsKey(data["chatName"]))
+        _messages[data["chatName"]] = [];
+      _messages[data["chatName"]].add(Message.fromJson(data));
+    });
+  }
+
+  Future<void> storeInMemory(String table, Map<String, dynamic> data) async {
+    print("STORING $data in $table");
+    DBHelper.insert(auth.userId, table, data);
+  }
+
   // Messages
 
   List<Message> messages(String chatName) => _messages[chatName];
@@ -101,9 +125,16 @@ class SocketProvider with ChangeNotifier {
   List<String> get chatNames => _messages.keys.toList();
 
   void addMessage(String message, String sender, String chatName) {
-    _messages[chatName]
-        .add(Message(content: message, sender: sender, time: DateTime.now()));
+    Message newMessage = Message(
+      content: message,
+      sender: sender,
+      time: DateTime.now(),
+      id: Uuid().v1(),
+      chatName: chatName,
+    );
+    _messages[chatName].add(newMessage);
     notifyListeners();
+    storeInMemory("MESSAGES", newMessage.toJson());
   }
 
   // Users
@@ -111,7 +142,15 @@ class SocketProvider with ChangeNotifier {
   List<User> get onlineUsers =>
       _users.values.where((user) => user.isOnline).toList();
 
-  User getUser(String name) {
-    return _users[name];
+  User getUser(String username) {
+    return _users[username];
+  }
+
+  String getImageUrl(String username) {
+    return _users[username]?.imageUrl ?? "assets/images/profile_icon.jpg";
+  }
+
+  bool userIsOnline(String username) {
+    return _users[username].isOnline;
   }
 }

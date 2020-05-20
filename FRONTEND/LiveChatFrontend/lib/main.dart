@@ -3,6 +3,7 @@ import 'package:LiveChatFrontend/providers/socket_provider.dart';
 import 'package:LiveChatFrontend/screens/auth_screen.dart';
 import 'package:LiveChatFrontend/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import './screens/home_screen.dart';
 
@@ -13,6 +14,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(

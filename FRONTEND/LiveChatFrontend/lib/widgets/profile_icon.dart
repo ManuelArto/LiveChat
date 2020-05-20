@@ -1,5 +1,7 @@
 import 'package:LiveChatFrontend/models/user.dart';
+import 'package:LiveChatFrontend/providers/socket_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProfileIcon extends StatelessWidget {
   const ProfileIcon({
@@ -28,9 +30,12 @@ class ProfileIcon extends StatelessWidget {
                 ),
               ),
             ),
-            CircleAvatar(
-              backgroundColor: Colors.greenAccent[700],
-              radius: 10,
+            Consumer<SocketProvider>(
+              builder: (context, socketProvider, child) => CircleAvatar(
+                backgroundColor:
+                    socketProvider.userIsOnline(user.username) ? Colors.greenAccent[700] : Colors.red,
+                radius: 10,
+              ),
             ),
           ],
         ),
