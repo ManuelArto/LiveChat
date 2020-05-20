@@ -15,10 +15,12 @@ class ChatsList extends StatelessWidget {
         child: GestureDetector(
           onTap: () {
             socketProvider.readChat(chats[index]["chatName"]);
-            Navigator.of(context).pushNamed(
-              ChatScreen.routeName,
-              arguments: chats[index]["chatName"],
-            );
+            Navigator.of(context)
+                .pushNamed(
+                  ChatScreen.routeName,
+                  arguments: chats[index]["chatName"],
+                )
+                .then((_) => socketProvider.currentChat = "");
           },
           child: ListTile(
             leading: Stack(

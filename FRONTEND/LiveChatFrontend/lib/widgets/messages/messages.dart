@@ -32,6 +32,7 @@ class _MessagesState extends State<Messages> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
     final socketProvider = Provider.of<SocketProvider>(context);
     final messages = socketProvider.messages(widget.chatName);
+    socketProvider.currentChat = widget.chatName;
     return ListView.builder(
       controller: _scrollController,
       shrinkWrap: true,

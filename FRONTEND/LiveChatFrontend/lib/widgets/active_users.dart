@@ -11,7 +11,8 @@ class ActiveUsers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeUsers = Provider.of<SocketProvider>(context).onlineUsers;
+    final socketProvider = Provider.of<SocketProvider>(context);
+    final activeUsers = socketProvider.onlineUsers;
     return Container(
       margin: const EdgeInsets.only(left: 30.0, top: 5),
       height: screenSize.height * 0.12,
@@ -31,9 +32,13 @@ class ActiveUsers extends StatelessWidget {
               itemBuilder: (context, index) {
                 final user = activeUsers[index];
                 return GestureDetector(
-                  onTap: () => Navigator.of(context).pushNamed(
-                      ChatScreen.routeName,
-                      arguments: user.username),
+                  onTap: () {
+                    socketProvider.readChat(user.username);
+                    Navigator.of(context)
+                        .pushNamed(ChatScreen.routeName,
+                            arguments: user.username)
+                        .then((_) => socketProvider.currentChat = "");
+                  },
                   child: ProfileIcon(user: user),
                 );
               },

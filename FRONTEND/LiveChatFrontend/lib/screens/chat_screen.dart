@@ -19,7 +19,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<SocketProvider>(context, listen: false).getUser(widget.chatName);
+    final socketProvider = Provider.of<SocketProvider>(context, listen: false);
+    final user = socketProvider.getUser(widget.chatName);
+    socketProvider.currentChat = widget.chatName;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).accentColor.withOpacity(0.6),

@@ -18,6 +18,7 @@ class SocketProvider with ChangeNotifier {
   Map<String, Map<String, dynamic>> _messages = {
     "GLOBAL": {"toRead": 0, "list": []}
   };
+  String currentChat = "";
 
   Future<void> init() async {
     print("INIT");
@@ -158,7 +159,7 @@ class SocketProvider with ChangeNotifier {
       chatName: chatName,
     );
     _messages[chatName]["list"].add(newMessage);
-    _messages[chatName]["toRead"] += 1;
+    if (currentChat != chatName) _messages[chatName]["toRead"] += 1;
     notifyListeners();
     storeInMemory("MESSAGES", newMessage.toJson());
   }
