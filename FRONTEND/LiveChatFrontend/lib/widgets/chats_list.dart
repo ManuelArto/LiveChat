@@ -6,18 +6,39 @@ import 'package:provider/provider.dart';
 class ChatsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final chats = Provider.of<SocketProvider>(context).chats;
+    final socketProvider = Provider.of<SocketProvider>(context);
+    final chats = socketProvider.chats;
     return ListView.builder(
       itemCount: chats.length,
       itemBuilder: (context, index) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: GestureDetector(
-          onTap: () => Navigator.of(context).pushNamed(
-            ChatScreen.routeName,
-            arguments: chats[index]["chatName"],
-          ),
+          onTap: () {
+            socketProvider.readChat(chats[index]["chatName"]);
+            Navigator.of(context).pushNamed(
+              ChatScreen.routeName,
+              arguments: chats[index]["chatName"],
+            );
+          },
           child: ListTile(
-            leading: Icon(Icons.chat_bubble),
+            leading: Stack(
+              children: [
+                Icon(Icons.chat_bubble),
+                Positioned(
+                  top: -10,
+                  left: -10,
+                  child: CircleAvatar(
+                    maxRadius: 10.0,
+                    backgroundColor: Theme.of(context).accentColor,
+                    child: Text(
+                      chats[index]["toRead"],
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                )
+              ],
+              overflow: Overflow.visible,
+            ),
             title: Text(
               chats[index]["chatName"],
               style: TextStyle(fontWeight: FontWeight.bold),

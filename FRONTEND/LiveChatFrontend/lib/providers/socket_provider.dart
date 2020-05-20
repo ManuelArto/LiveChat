@@ -15,11 +15,13 @@ class SocketProvider with ChangeNotifier {
   Socket _socketIO;
   Auth auth;
   Map<String, User> _users;
-  Map<String, List<Message>> _messages;
+  Map<String, Map<String, dynamic>> _messages;
 
   SocketProvider() {
     _users = {};
-    _messages = {"GLOBAL": []};
+    _messages = {
+      "GLOBAL": {"toRead": 0, "list": []}
+    };
   }
 
   Future<void> init() async {
@@ -62,7 +64,7 @@ class SocketProvider with ChangeNotifier {
             isOnline: true,
           );
           storeInMemory("USERS", _users[username].toJson());
-          _messages[username] = [];
+          _messages[username] = {"toRead": 0, "list": []};
         } else
           _users[username].isOnline = true;
       }
@@ -109,8 +111,8 @@ class SocketProvider with ChangeNotifier {
     final messagesList = await DBHelper.getData(auth.userId, "MESSAGES");
     messagesList.forEach((data) {
       if (!_messages.containsKey(data["chatName"]))
-        _messages[data["chatName"]] = [];
-      _messages[data["chatName"]].add(Message.fromJson(data));
+        _messages[data["chatName"]] = {"toRead": 0, "list": []};
+      _messages[data["chatName"]]["list"].add(Message.fromJson(data));
     });
   }
 
@@ -121,18 +123,24 @@ class SocketProvider with ChangeNotifier {
 
   // Messages
 
-  List<Message> messages(String chatName) => _messages[chatName];
+  List<dynamic> messages(String chatName) => _messages[chatName]["list"];
 
-  List<Map<String, String>> get chats {
-    final List<Map<String, String>> chats = [];
+  void readChat(String chatName) {
+    _messages[chatName]["toRead"] = 0;
+    notifyListeners();
+  }
+
+  List<Map<String, dynamic>> get chats {
+    final List<Map<String, dynamic>> chats = [];
     _messages.forEach((chatName, data) {
-      if (data.length == 0) return ;
+      if (data["list"].length == 0) return;
       chats.add({
         "chatName": chatName,
         "lastMessage": getUser(chatName) == null
-            ? "${data.last.sender}: ${data.last.content}"
-            : data.last.content,
-        "time": DateFormat("jm").format(data.last.time),
+            ? "${data["list"].last.sender}: ${data["list"].last.content}"
+            : data["list"].last.content,
+        "time": DateFormat("jm").format(data["list"].last.time),
+        "toRead": data["toRead"].toString(),
       });
     });
     return chats;
@@ -146,7 +154,8 @@ class SocketProvider with ChangeNotifier {
       id: Uuid().v1(),
       chatName: chatName,
     );
-    _messages[chatName].add(newMessage);
+    _messages[chatName]["list"].add(newMessage);
+    _messages[chatName]["toRead"] += 1;
     notifyListeners();
     storeInMemory("MESSAGES", newMessage.toJson());
   }
