@@ -4,8 +4,8 @@ import datetime
 from functools import wraps
 import jwt
 
-EXP_TOKEN = datetime.timedelta(seconds=10)
-EXP_REFRESH_TOKEN = datetime.timedelta(minutes=1)
+EXP_TOKEN = datetime.timedelta(minutes=30)
+EXP_REFRESH_TOKEN = datetime.timedelta(hours=4)
 
 def token_required(f):
 	@wraps(f)

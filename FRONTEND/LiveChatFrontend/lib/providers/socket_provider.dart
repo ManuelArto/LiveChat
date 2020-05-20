@@ -14,14 +14,16 @@ import '../constants.dart';
 class SocketProvider with ChangeNotifier {
   Socket _socketIO;
   Auth auth;
-  Map<String, User> _users = {};
-  Map<String, Map<String, dynamic>> _messages = {
-    "GLOBAL": {"toRead": 0, "list": []}
-  };
+  Map<String, User> _users;
+  Map<String, Map<String, dynamic>> _messages;
   String currentChat = "";
 
   Future<void> init() async {
     print("INIT");
+    _users = {};
+    _messages = {
+      "GLOBAL": {"toRead": 0, "list": []}
+    };
     if (!identical(0.0, 0)) await getFromMemory();
     _socketIO = io('$URL_SOCKETIO/socketio', <String, dynamic>{
       'transports': ['websocket', "polling"],
