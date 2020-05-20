@@ -14,15 +14,10 @@ import '../constants.dart';
 class SocketProvider with ChangeNotifier {
   Socket _socketIO;
   Auth auth;
-  Map<String, User> _users;
-  Map<String, Map<String, dynamic>> _messages;
-
-  SocketProvider() {
-    _users = {};
-    _messages = {
-      "GLOBAL": {"toRead": 0, "list": []}
-    };
-  }
+  Map<String, User> _users = {};
+  Map<String, Map<String, dynamic>> _messages = {
+    "GLOBAL": {"toRead": 0, "list": []}
+  };
 
   Future<void> init() async {
     print("INIT");
@@ -133,15 +128,23 @@ class SocketProvider with ChangeNotifier {
   List<Map<String, dynamic>> get chats {
     final List<Map<String, dynamic>> chats = [];
     _messages.forEach((chatName, data) {
-      if (data["list"].length == 0) return;
-      chats.add({
-        "chatName": chatName,
-        "lastMessage": getUser(chatName) == null
-            ? "${data["list"].last.sender}: ${data["list"].last.content}"
-            : data["list"].last.content,
-        "time": DateFormat("jm").format(data["list"].last.time),
-        "toRead": data["toRead"].toString(),
-      });
+      if (data["list"].length == 0) {
+        chats.add({
+          "chatName": chatName,
+          "lastMessage": "No message",
+          "time": "",
+          "toRead": data["toRead"].toString(),
+        });
+      } else {
+        chats.add({
+          "chatName": chatName,
+          "lastMessage": getUser(chatName) == null
+              ? "${data['list'].last.sender}: ${data["list"].last.content}"
+              : data["list"].last.content,
+          "time": DateFormat("jm").format(data["list"].last.time),
+          "toRead": data["toRead"].toString(),
+        });
+      }
     });
     return chats;
   }

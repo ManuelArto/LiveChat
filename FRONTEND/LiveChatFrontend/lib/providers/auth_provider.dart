@@ -141,8 +141,8 @@ class Auth with ChangeNotifier {
   }
 
   void _autoRefresh() {
-    final timeToLogout = _expToken.difference(DateTime.now()).inSeconds;
-    Timer(Duration(seconds: timeToLogout), _getNewToken);
+    final timeToRefresh = _expToken.difference(DateTime.now()).inSeconds;
+    Timer(Duration(seconds: timeToRefresh), _getNewToken);
   }
 
   // void _autoLogout() {
