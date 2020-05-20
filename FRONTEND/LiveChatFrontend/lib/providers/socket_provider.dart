@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:LiveChatFrontend/helpers/db_helper.dart';
 import 'package:LiveChatFrontend/models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 import 'package:LiveChatFrontend/providers/auth_provider.dart';
@@ -122,7 +123,20 @@ class SocketProvider with ChangeNotifier {
 
   List<Message> messages(String chatName) => _messages[chatName];
 
-  List<String> get chatNames => _messages.keys.toList();
+  List<Map<String, String>> get chats {
+    final List<Map<String, String>> chats = [];
+    _messages.forEach((chatName, data) {
+      if (data.length == 0) return ;
+      chats.add({
+        "chatName": chatName,
+        "lastMessage": getUser(chatName) == null
+            ? "${data.last.sender}: ${data.last.content}"
+            : data.last.content,
+        "time": DateFormat("jm").format(data.last.time),
+      });
+    });
+    return chats;
+  }
 
   void addMessage(String message, String sender, String chatName) {
     Message newMessage = Message(
