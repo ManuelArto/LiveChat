@@ -3,8 +3,9 @@ import 'dart:io';
 
 import 'package:LiveChatFrontend/providers/auth_provider.dart';
 import 'package:LiveChatFrontend/widgets/auth/user_image_picker.dart';
+import 'package:LiveChatFrontend/widgets/auth/user_image_picker_web.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'package:provider/provider.dart';
 
 class AuthForm extends StatefulWidget {
@@ -54,7 +55,9 @@ class _AuthFormState extends State<AuthForm>
           _authData["email"],
           _authData["username"],
           _authData["password"],
-          base64Encode(_authData["imageFile"].readAsBytesSync()),
+          base64Encode(identical(0, 0.0)
+              ? _authData["imageFile"]
+              : _authData["imageFile"].readAsBytesSync()),
         );
       }
     } catch (error) {
@@ -70,6 +73,11 @@ class _AuthFormState extends State<AuthForm>
 
   void _pickedImage(File image) {
     _authData["imageFile"] = image;
+  }
+
+  Future<void> _pickedImageWeb(String path) async {
+    ByteData bytes = await rootBundle.load(path);
+    _authData["imageFile"] = bytes.buffer.asUint8List();
   }
 
   @override
@@ -94,8 +102,10 @@ class _AuthFormState extends State<AuthForm>
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      if (!_isLogin)
+                      if (!_isLogin && !identical(0, 0.0))
                         UserImagePicker(_pickedImage, _authData["imageFile"]),
+                      if (!_isLogin && identical(0, 0.0))
+                        UserImagePickerWeb(_pickedImageWeb),
                       if (!_isLogin)
                         TextFormField(
                           autocorrect: false,
@@ -118,11 +128,11 @@ class _AuthFormState extends State<AuthForm>
                         key: ValueKey("email"),
                         onSaved: (newValue) =>
                             _authData["email"] = newValue.trim(),
-                        validator: (value) =>
-                            (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                    .hasMatch(value))
-                                ? "Please enter a valide email"
-                                : null,
+                        validator: (value) => (!RegExp(
+                                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                .hasMatch(value))
+                            ? "Please enter a valide email"
+                            : null,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(labelText: "Email address"),
                       ),
@@ -131,10 +141,11 @@ class _AuthFormState extends State<AuthForm>
                         key: ValueKey("password"),
                         onSaved: (newValue) =>
                             _authData["password"] = newValue.trim(),
-                        validator: (value) =>
-                            (value.isEmpty || value.length < 4 || value.contains(" "))
-                                ? "Please enter at least 4 characters"
-                                : null,
+                        validator: (value) => (value.isEmpty ||
+                                value.length < 4 ||
+                                value.contains(" "))
+                            ? "Please enter at least 4 characters"
+                            : null,
                         decoration: InputDecoration(labelText: "Password"),
                         obscureText: true,
                       ),
