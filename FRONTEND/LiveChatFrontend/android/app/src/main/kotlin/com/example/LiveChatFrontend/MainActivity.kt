@@ -1,4 +1,4 @@
-package com.example.LiveChatFrontend
+package com.manuelarto.LiveChat
 
 import io.flutter.embedding.android.FlutterActivity
 

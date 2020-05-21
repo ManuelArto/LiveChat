@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.LiveChatFrontend">
+    package="com.manuelarto.LiveChat">
     <uses-permission android:name="android.permission.INTERNET"/>
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
@@ -9,7 +9,7 @@
     <application
         android:usesCleartextTraffic="true"
         android:name="io.flutter.app.FlutterApplication"
-        android:label="LiveChatFrontend"
+        android:label="LiveChat"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
