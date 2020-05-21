@@ -26,9 +26,9 @@ def token_required(f):
 	
 	return decorator
 
-def get_data(token):
+def get_data(token, verify):
 	try:
-		data = jwt.decode(token, app.config["SECRET_KEY"])
+		data = jwt.decode(token, app.config["SECRET_KEY"], verify=verify)
 		return data["username"], f"https://firebasestorage.googleapis.com/v0/b/livechat-e7db8.appspot.com/o/profileIcons%2F{data['uid']}.jpg?alt=media"
 	except:
 		return None, None
