@@ -4,6 +4,7 @@ from .. import app, db
 from ..models import Users
 from .jwt import token_required
 import datetime
+import base64
 
 @app.route("/api/login", methods=["POST"])
 def login():
@@ -25,6 +26,8 @@ def login():
 @app.route("/api/register", methods=["POST"])
 def signup():
 	data = request.get_json(force=True)
+	print(data)
+	convert_and_save(data["image"])
 	try:
 		new_user = Users(email=data["email"], username=data["username"], password=data["password"])
 		db.session.add(new_user)
@@ -49,3 +52,10 @@ def refresh_token(data):
 def private(data):
 	current_user = Users.query.filter_by(uid=data["uid"]).first()
 	return jsonify({"user": [current_user.username, current_user.uid]})
+
+
+
+
+def convert_and_save(b64_string):
+    with open("images/imageToSave.png", "wb+") as fh:
+        fh.write(base64.decodebytes(b64_string.encode()))

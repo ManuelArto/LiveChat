@@ -52,9 +52,9 @@ class Auth with ChangeNotifier {
     return true;
   }
 
-  Future<void> signup(String email, String username, String password) async {
+  Future<void> signup(String email, String username, String password, String image) async {
     return _authenticate(
-      {"username": username, "email": email, "password": password},
+      {"username": username, "email": email, "password": password, "image": image},
       URL_AUTH_SIGNUP,
     );
   }

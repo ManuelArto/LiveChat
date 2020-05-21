@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:LiveChatFrontend/providers/auth_provider.dart';
@@ -30,13 +31,13 @@ class _AuthFormState extends State<AuthForm>
 
   Future<void> _submitForm() async {
     FocusScope.of(context).unfocus();
-    // if (!_isLogin && _authData["imageFile"] == null) {
-    //   Scaffold.of(context).showSnackBar(SnackBar(
-    //     content: Text("Please pick an Image"),
-    //     backgroundColor: Theme.of(context).errorColor,
-    //   ));
-    //   return;
-    // }
+    if (!_isLogin && _authData["imageFile"] == null) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text("Please pick an Image"),
+        backgroundColor: Theme.of(context).errorColor,
+      ));
+      return;
+    }
     if (!_formKey.currentState.validate()) return;
     _formKey.currentState.save();
     setState(() {
@@ -49,10 +50,12 @@ class _AuthFormState extends State<AuthForm>
           _authData["password"],
         );
       } else {
+        print(_authData);
         await Provider.of<Auth>(context, listen: false).signup(
           _authData["email"],
           _authData["username"],
           _authData["password"],
+          base64Encode(_authData["imageFile"].readAsBytesSync()),
         );
       }
     } catch (error) {
@@ -102,8 +105,8 @@ class _AuthFormState extends State<AuthForm>
                           key: ValueKey("username"),
                           onSaved: (newValue) =>
                               _authData["username"] = newValue.trim(),
-                          validator: (value) => (value.isEmpty || value.length < 7)
-                              ? "Password must be at least 7 characters long"
+                          validator: (value) => (value.isEmpty || value.length < 4)
+                              ? "Username must be at least 4 characters long"
                               : null,
                           decoration: InputDecoration(labelText: "Username"),
                         ),

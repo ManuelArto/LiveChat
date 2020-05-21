@@ -17,7 +17,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
   void _pickImage() async {
     final ImageSource imageSource = await _showDialog();
     if (imageSource != null) {
-      final image = await ImagePicker.pickImage(source: imageSource);
+      final image = await ImagePicker.pickImage(source: imageSource, imageQuality: 50, maxWidth: 50);
       setState(() {
         widget._pickedImage = image;
       });
