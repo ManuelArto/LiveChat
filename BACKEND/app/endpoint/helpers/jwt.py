@@ -1,5 +1,5 @@
 from flask import jsonify, request
-from .. import app
+from app import app
 import datetime
 from functools import wraps
 import jwt
@@ -26,12 +26,12 @@ def token_required(f):
 	
 	return decorator
 
-def get_username(token):
+def get_data(token):
 	try:
 		data = jwt.decode(token, app.config["SECRET_KEY"])
-		return data["username"]
+		return data["username"], f"https://firebasestorage.googleapis.com/v0/b/livechat-e7db8.appspot.com/o/profileIcons%2F{data['uid']}.jpg?alt=media"
 	except:
-		return None
+		return None, None
 	
 def generate_token(user):
 	return jwt.encode({

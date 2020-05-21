@@ -37,7 +37,7 @@ class SocketProvider with ChangeNotifier {
     _socketIO.on("disconnect", (_) => print('Disconnected'));
     _socketIO.on('receive_message', _receiveMessage);
     _socketIO.on("user_connected", _userConnected);
-    _socketIO.on("user_disconnecred", _userDisconnected);
+    _socketIO.on("user_disconnected", _userDisconnected);
   }
 
   void _receiveMessage(jsonData) {
@@ -61,10 +61,12 @@ class SocketProvider with ChangeNotifier {
             imageUrl: data["imageUrl"],
             isOnline: true,
           );
-          storeInMemory("USERS", _users[username].toJson());
-          _messages[username] = {"toRead": 0, "list": []};
         } else
           _users[username].isOnline = true;
+        if (!_messages.containsKey(username)){
+          storeInMemory("USERS", _users[username].toJson());
+          _messages[username] = {"toRead": 0, "list": []};
+        }
       }
     });
     notifyListeners();
@@ -176,7 +178,7 @@ class SocketProvider with ChangeNotifier {
   }
 
   String getImageUrl(String username) {
-    return _users[username]?.imageUrl ?? "assets/images/profile_icon.jpg";
+    return _users[username]?.imageUrl ?? auth.imageUrl;
   }
 
   bool userIsOnline(String username) {

@@ -33,7 +33,9 @@ class _ChatScreenState extends State<ChatScreen> {
         actions: [
           Padding(
             padding: const EdgeInsets.all(4.0),
-            child: user == null ? null : ProfileIcon(user: user),
+            child: FittedBox(
+              child: user == null ? null : ProfileIcon(user: user),
+            ),
           ),
         ],
       ),

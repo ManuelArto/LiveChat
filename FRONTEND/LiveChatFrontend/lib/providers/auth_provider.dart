@@ -15,7 +15,9 @@ class Auth with ChangeNotifier {
   DateTime _expRefreshToken;
   String _userId;
   String _username;
+  String imageUrl;
   Function disconncect;
+  Timer _timer;
 
   String get username => _username;
 
@@ -46,15 +48,22 @@ class Auth with ChangeNotifier {
     _token = userData["token"];
     refreshToken = userData["refreshToken"];
     _username = userData["username"];
+    imageUrl = userData["imageUrl"];
     if (!isAuth) return false;
     _autoRefresh();
     notifyListeners();
     return true;
   }
 
-  Future<void> signup(String email, String username, String password, String image) async {
+  Future<void> signup(
+      String email, String username, String password, String image) async {
     return _authenticate(
-      {"username": username, "email": email, "password": password, "image": image},
+      {
+        "username": username,
+        "email": email,
+        "password": password,
+        "imageFile": image
+      },
       URL_AUTH_SIGNUP,
     );
   }
@@ -67,7 +76,6 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> _authenticate(Map<String, dynamic> body, String url) async {
-    try {
       final response = await http.post(
         url,
         body: json.encode(body),
@@ -76,9 +84,6 @@ class Auth with ChangeNotifier {
       if (responseData.containsKey("error"))
         throw HttpException(responseData["error"]);
       saveData(responseData);
-    } catch (error) {
-      throw error;
-    }
   }
 
   Future<void> _getNewToken() async {
@@ -109,6 +114,7 @@ class Auth with ChangeNotifier {
     _expToken = null;
     final prefs = await SharedPreferences.getInstance();
     prefs.clear();
+    _timer.cancel();
     disconncect();
     notifyListeners();
   }
@@ -118,6 +124,7 @@ class Auth with ChangeNotifier {
     refreshToken = responseData["refreshToken"];
     _username = responseData["username"];
     _userId = responseData["uid"];
+    imageUrl = responseData["imageUrl"];
     _expToken =
         DateTime.now().add(Duration(seconds: responseData["expInToken"]));
     _expRefreshToken = DateTime.now()
@@ -135,14 +142,15 @@ class Auth with ChangeNotifier {
       "userId": _userId,
       "username": _username,
       "expInRefreshToken": _expRefreshToken.toIso8601String(),
-      "expInToken": _expToken.toIso8601String()
+      "expInToken": _expToken.toIso8601String(),
+      "imageUrl": imageUrl,
     });
     prefs.setString("userData", userData);
   }
 
   void _autoRefresh() {
     final timeToRefresh = _expToken.difference(DateTime.now()).inSeconds;
-    Timer(Duration(seconds: timeToRefresh), _getNewToken);
+    _timer = Timer(Duration(seconds: timeToRefresh), _getNewToken);
   }
 
   // void _autoLogout() {

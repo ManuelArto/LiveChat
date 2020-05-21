@@ -13,11 +13,14 @@ class UserImagePicker extends StatefulWidget {
 }
 
 class _UserImagePickerState extends State<UserImagePicker> {
-
   void _pickImage() async {
     final ImageSource imageSource = await _showDialog();
     if (imageSource != null) {
-      final image = await ImagePicker.pickImage(source: imageSource, imageQuality: 50, maxWidth: 50);
+      final image = await ImagePicker.pickImage(
+        source: imageSource,
+        maxWidth: 128,
+        maxHeight: 128,
+      );
       setState(() {
         widget._pickedImage = image;
       });
@@ -31,8 +34,9 @@ class _UserImagePickerState extends State<UserImagePicker> {
       children: <Widget>[
         CircleAvatar(
           radius: 40,
-          backgroundImage:
-              widget._pickedImage != null ? FileImage(widget._pickedImage) : null,
+          backgroundImage: widget._pickedImage != null
+              ? FileImage(widget._pickedImage)
+              : null,
           child: Text(
             widget._pickedImage != null ? "" : "Select\nimage",
           ),

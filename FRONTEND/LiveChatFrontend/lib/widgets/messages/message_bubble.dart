@@ -30,7 +30,7 @@ class MessageBubble extends StatelessWidget {
               constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width * 0.5),
               decoration: BoxDecoration(
-                color: isMe ? Colors.green: Colors.grey[300],
+                color: isMe ? Colors.green : Colors.grey[300],
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
@@ -51,7 +51,7 @@ class MessageBubble extends StatelessWidget {
                       username,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: isMe ? Colors.black: Colors.grey[900],
+                        color: isMe ? Colors.black : Colors.grey[900],
                       ),
                     ),
                   ),
@@ -68,12 +68,15 @@ class MessageBubble extends StatelessWidget {
             ),
             Positioned(
               top: -5,
-              right: isMe ? null : 0,
+              right: isMe ? null : -10,
+              left: isMe ? -10: null,
               child: GestureDetector(
-                onTap: () => Navigator.of(context)
-                    .pushNamed(ChatScreen.routeName, arguments: username),
+                onTap: isMe
+                    ? () {}
+                    : () => Navigator.of(context)
+                        .pushNamed(ChatScreen.routeName, arguments: username),
                 child: CircleAvatar(
-                  backgroundImage: AssetImage(imageUrL),
+                  backgroundImage: NetworkImage(imageUrL),
                 ),
               ),
             ),

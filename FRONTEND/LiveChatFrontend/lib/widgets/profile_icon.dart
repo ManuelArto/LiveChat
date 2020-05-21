@@ -22,18 +22,13 @@ class ProfileIcon extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 30.0,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(30.0),
-                child: Image.asset(
-                  user.imageUrl,
-                  fit: BoxFit.cover,
-                ),
-              ),
+              backgroundImage: NetworkImage(user.imageUrl),
             ),
             Consumer<SocketProvider>(
               builder: (context, socketProvider, child) => CircleAvatar(
-                backgroundColor:
-                    socketProvider.userIsOnline(user.username) ? Colors.greenAccent[700] : Colors.red,
+                backgroundColor: socketProvider.userIsOnline(user.username)
+                    ? Colors.greenAccent[700]
+                    : Colors.red,
                 radius: 10,
               ),
             ),

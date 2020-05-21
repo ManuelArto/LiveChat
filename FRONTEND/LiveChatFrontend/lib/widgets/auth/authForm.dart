@@ -50,7 +50,6 @@ class _AuthFormState extends State<AuthForm>
           _authData["password"],
         );
       } else {
-        print(_authData);
         await Provider.of<Auth>(context, listen: false).signup(
           _authData["email"],
           _authData["username"],
@@ -105,7 +104,9 @@ class _AuthFormState extends State<AuthForm>
                           key: ValueKey("username"),
                           onSaved: (newValue) =>
                               _authData["username"] = newValue.trim(),
-                          validator: (value) => (value.isEmpty || value.length < 4)
+                          validator: (value) => (value.isEmpty ||
+                                  value.length < 4 ||
+                                  value.contains(" "))
                               ? "Username must be at least 4 characters long"
                               : null,
                           decoration: InputDecoration(labelText: "Username"),
@@ -115,9 +116,11 @@ class _AuthFormState extends State<AuthForm>
                         textCapitalization: TextCapitalization.none,
                         enableSuggestions: false,
                         key: ValueKey("email"),
-                        onSaved: (newValue) => _authData["email"] = newValue.trim(),
+                        onSaved: (newValue) =>
+                            _authData["email"] = newValue.trim(),
                         validator: (value) =>
-                            (value.isEmpty || !value.contains("@"))
+                            (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                    .hasMatch(value))
                                 ? "Please enter a valide email"
                                 : null,
                         keyboardType: TextInputType.emailAddress,
@@ -128,18 +131,20 @@ class _AuthFormState extends State<AuthForm>
                         key: ValueKey("password"),
                         onSaved: (newValue) =>
                             _authData["password"] = newValue.trim(),
-                        validator: (value) => (value.isEmpty || value.length < 4)
-                            ? "Please enter at least 4 characters"
-                            : null,
+                        validator: (value) =>
+                            (value.isEmpty || value.length < 4 || value.contains(" "))
+                                ? "Please enter at least 4 characters"
+                                : null,
                         decoration: InputDecoration(labelText: "Password"),
                         obscureText: true,
                       ),
                       if (!_isLogin)
                         TextFormField(
                           key: ValueKey("Confirm password"),
-                          validator: (value) => (value != _passwordController.text)
-                              ? "Password doesn't match"
-                              : null,
+                          validator: (value) =>
+                              (value != _passwordController.text)
+                                  ? "Password doesn't match"
+                                  : null,
                           decoration:
                               InputDecoration(labelText: "Confirm password"),
                           obscureText: true,
@@ -161,7 +166,9 @@ class _AuthFormState extends State<AuthForm>
                           onPressed: () => setState(() => _isLogin = !_isLogin),
                         ),
                       if (_isLoading)
-                        Center(heightFactor: 3, child: CircularProgressIndicator()),
+                        Center(
+                            heightFactor: 3,
+                            child: CircularProgressIndicator()),
                     ],
                   ),
                 ),
