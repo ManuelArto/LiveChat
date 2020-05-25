@@ -28,7 +28,7 @@ psycopg2==2.8.5
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycparser==2.20
-pycryptodome==3.4.3
+pycryptodome==3.6.6
 PyJWT==1.7.1
 Pyrebase==3.0.27
 python-dotenv==0.13.0
@@ -36,7 +36,7 @@ python-engineio==3.12.1
 python-jwt==2.0.1
 python-socketio==4.5.1
 pytz==2020.1
-requests==2.11.1
+requests==2.20.0
 requests-toolbelt==0.7.0
 rsa==4.0
 six==1.14.0
