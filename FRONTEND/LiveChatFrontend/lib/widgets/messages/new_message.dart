@@ -36,6 +36,10 @@ class _NewMessageState extends State<NewMessage> {
       decoration: BoxDecoration(
           color: Colors.grey[200], borderRadius: BorderRadius.circular(40.0)),
       child: ListTile(
+        // leading: IconButton(
+        //   icon: Icon(Icons.image),
+        //   onPressed: () {},
+        // ),
         title: TextField(
           autocorrect: true,
           textCapitalization: TextCapitalization.sentences,

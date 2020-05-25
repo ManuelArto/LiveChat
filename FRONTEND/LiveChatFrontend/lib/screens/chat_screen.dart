@@ -16,7 +16,6 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-
   @override
   Widget build(BuildContext context) {
     final socketProvider = Provider.of<SocketProvider>(context, listen: false);
@@ -27,15 +26,14 @@ class _ChatScreenState extends State<ChatScreen> {
         backgroundColor: Theme.of(context).accentColor.withOpacity(0.6),
         title: Text(
           widget.chatName,
-          style:
-              TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: FittedBox(
-              child: user == null ? null : ProfileIcon(user: user),
-            ),
+          Container(
+            margin: const EdgeInsets.only(right: 10.0),
+            child: user == null
+                ? null
+                : ProfileIcon(user: user),
           ),
         ],
       ),

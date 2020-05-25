@@ -63,8 +63,9 @@ class SocketProvider with ChangeNotifier {
           );
         } else
           _users[username].isOnline = true;
-        if (!_messages.containsKey(username)){
-          storeInMemory("USERS", _users[username].toJson());
+        if (!_messages.containsKey(username)) {
+          if (!identical(0, 0.0))
+            storeInMemory("USERS", _users[username].toJson());
           _messages[username] = {"toRead": 0, "list": []};
         }
       }
@@ -165,7 +166,7 @@ class SocketProvider with ChangeNotifier {
     _messages[chatName]["list"].add(newMessage);
     if (currentChat != chatName) _messages[chatName]["toRead"] += 1;
     notifyListeners();
-    storeInMemory("MESSAGES", newMessage.toJson());
+    if (!identical(0, 0.0)) storeInMemory("MESSAGES", newMessage.toJson());
   }
 
   // Users
