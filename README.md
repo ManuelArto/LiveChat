@@ -1,5 +1,5 @@
 # LiveChat
-Livechat is cross-platfrom web application where users can authenticate and chat instantly.
+Livechat is cross-platform web application where users can authenticate and chat instantly.
 
 ## Usage
 Click [here](https://manuelarto.github.io/livechat) to visit the web-app
@@ -50,16 +50,16 @@ You need to have an Heroku account to host the server, but you can also run it l
 	$ pip install -r requirements.txt
 *  Create a new file 'app/helpers/firebase_config.py' and add wyour firebase project credentials:
 	```python
-		firebaseConfig = {
-			"apiKey": "",
-			"authDomain": "",
-			"databaseURL": "",
-			"projectId": "",
-			"storageBucket": "",
-			"messagingSenderId": "",
-			"appId": "",
-			"measurementId": ""
-		}
+	firebaseConfig = {
+		"apiKey": "",
+		"authDomain": "",
+		"databaseURL": "",
+		"projectId": "",
+		"storageBucket": "",
+		"messagingSenderId": "",
+		"appId": "",
+		"measurementId": ""
+	}
 	```
 * Run the server
 	```bash
