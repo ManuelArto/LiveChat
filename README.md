@@ -1,3 +1,6 @@
+# Preview
+![preview](preview.gif)
+
 # LiveChat
 Livechat is cross-platform web application where users can authenticate and chat instantly.
 
