@@ -1,8 +1,7 @@
-# Preview
-![preview](preview.gif)
-
 # LiveChat
-Livechat is cross-platform web application where users can authenticate and chat instantly.
+Livechat is cross-platform web application where users can authenticate and chat instantly. 
+
+![preview](preview.gif)
 
 ## Usage
 Click [here](https://manuelarto.github.io/livechat) to visit the web-app
