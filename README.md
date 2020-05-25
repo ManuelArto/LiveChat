@@ -13,6 +13,7 @@ Livechat is a full-stack application that implement a cross-platform web applica
 * Flutter UI Toolkit
 * Flask python microframework
 * JsonWebTokens for authentication during each requets
+* SocketIO for instant messaging
 * PostgreSQL DB
 * Firebase Storage (used for users profile icons)
 * Heroku (used to host the server)
