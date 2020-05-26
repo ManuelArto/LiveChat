@@ -1,9 +1,9 @@
 from flask import request, jsonify
 from sqlalchemy import exc
-from .. import app, db
-from ..models import Users
-from .helpers.jwt import token_required
-from .helpers import firebase
+from app import app, db
+from app.models import Users
+from app.helpers.jwt import token_required
+from app.helpers import firebase
 import datetime
 import base64
 

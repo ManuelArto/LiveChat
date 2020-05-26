@@ -1,8 +1,8 @@
 from flask_socketio import emit, send, join_room, leave_room
 from flask import request
 import json
-from .. import socketio
-from .helpers.jwt import get_data, token_required
+from app import socketio
+from app.helpers.jwt import get_data, token_required
 
 socket_clients = {}
 

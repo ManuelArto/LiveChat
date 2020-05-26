@@ -2,7 +2,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
 import datetime
 from . import db
-from .endpoint.helpers.jwt import generate_refresh_token, generate_token
+from .helpers.jwt import generate_refresh_token, generate_token
 
 class Users(db.Model):
 	__tablename = "USERS"
