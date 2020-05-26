@@ -33,7 +33,7 @@ $ flutter create .
 $ flutter run 
 ```
 
-## Backend installation
+## Backend
 All users images are store on Firebase Storage
 
 You need to have an Heroku account to host the server, but you can also run it locally.
