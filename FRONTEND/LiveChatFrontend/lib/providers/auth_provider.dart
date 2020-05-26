@@ -43,7 +43,7 @@ class Auth with ChangeNotifier {
     if (!prefs.containsKey("userData")) return false;
     final userData = json.decode(prefs.getString("userData"));
     _expToken = DateTime.parse(userData["expInToken"]);
-    _expRefreshToken = DateTime.parse(userData["expInToken"]);
+    _expRefreshToken = DateTime.parse(userData["expInRefreshToken"]);
     _userId = userData["userId"];
     _token = userData["token"];
     refreshToken = userData["refreshToken"];
@@ -114,7 +114,7 @@ class Auth with ChangeNotifier {
     _expToken = null;
     final prefs = await SharedPreferences.getInstance();
     prefs.clear();
-    _timer.cancel();
+    _timer?.cancel();
     disconncect();
     notifyListeners();
   }

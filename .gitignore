@@ -1,2 +1,3 @@
 livechat.apk
 BACKEND/app/helpers/firebase_config.py
+BACKEND/app/helpers/credentials.json
