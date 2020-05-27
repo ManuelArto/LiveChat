@@ -74,7 +74,7 @@ class MessageBubble extends StatelessWidget {
                 onTap: isMe
                     ? () {}
                     : () => Navigator.of(context)
-                        .pushNamed(ChatScreen.routeName, arguments: username),
+                        .pushReplacementNamed(ChatScreen.routeName, arguments: username),
                 child: CircleAvatar(
                   backgroundImage: NetworkImage(imageUrL),
                 ),
