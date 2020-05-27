@@ -114,11 +114,15 @@ class _AuthFormState extends State<AuthForm>
                           key: ValueKey("username"),
                           onSaved: (newValue) =>
                               _authData["username"] = newValue.trim(),
-                          validator: (value) => (value.isEmpty ||
-                                  value.length < 4 ||
-                                  value.contains(" "))
-                              ? "Username must be at least 4 characters long"
-                              : null,
+                          validator: (value) {
+                            if (value.isEmpty)
+                              return "Username must not be empty";
+                            if (value.contains(" "))
+                              return "Username must no contain spaces";
+                            if (value.length < 4)
+                              return "Username must be at least 4 characters long";
+                            return null;
+                          },
                           decoration: InputDecoration(labelText: "Username"),
                         ),
                       TextFormField(
@@ -141,11 +145,15 @@ class _AuthFormState extends State<AuthForm>
                         key: ValueKey("password"),
                         onSaved: (newValue) =>
                             _authData["password"] = newValue.trim(),
-                        validator: (value) => (value.isEmpty ||
-                                value.length < 4 ||
-                                value.contains(" "))
-                            ? "Please enter at least 4 characters"
-                            : null,
+                        validator: (value) {
+                          if (value.isEmpty)
+                            return "Password must not be empty";
+                          if (value.contains(" "))
+                            return "Password must no contain spaces";
+                          if (value.length < 7)
+                            return "Password must be at least 7 characters long";
+                          return null;
+                        },
                         decoration: InputDecoration(labelText: "Password"),
                         obscureText: true,
                       ),
