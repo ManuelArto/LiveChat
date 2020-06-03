@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class UserImagePickerWeb extends StatefulWidget {
-  final Function pickeImageWeb;
+  final Function pickedImageWeb;
 
-  UserImagePickerWeb(this.pickeImageWeb);
+  UserImagePickerWeb(this.pickedImageWeb);
 
   @override
   _UserImagePickerWebState createState() => _UserImagePickerWebState();
@@ -17,38 +17,41 @@ class _UserImagePickerWebState extends State<UserImagePickerWeb> {
     return Row(
       children: [
         Expanded(
-          child: FlatButton(
-            color:
-                active == 0 ? Theme.of(context).accentColor : Colors.grey[300],
-            onPressed: () {
-              setState(() {
-                active = 0;
-                widget.pickeImageWeb("assets/images/profile_icon_female.png");
-              });
-            },
-            child: ListTile(
-              leading: Icon(Icons.face),
-              title: Text("Female"),
-            ),
-          ),
+          child: buildButton(
+              context, Icons.tag_faces, "profile_icon_male.jpg", "Male"),
         ),
         Expanded(
-          child: FlatButton(
-            color:
-                active == 1 ? Theme.of(context).accentColor : Colors.grey[300],
-            onPressed: () {
-              setState(() {
-                active = 1;
-                widget.pickeImageWeb("assets/images/profile_icon_male.jpg");
-              });
-            },
-            child: ListTile(
-              leading: Icon(Icons.tag_faces),
-              title: Text("Male"),
-            ),
-          ),
+          child: buildButton(
+              context, Icons.face, "profile_icon_female.png", "Female"),
         ),
       ],
+    );
+  }
+
+  FlatButton buildButton(
+      BuildContext context, IconData icon, String imagePath, String type) {
+    return FlatButton(
+      color: active == (type == "Male" ? 1 : 0)
+          ? Theme.of(context).accentColor
+          : Colors.grey[300],
+      onPressed: () {
+        setState(() {
+          active = (type == "Male" ? 1 : 0);
+          widget.pickedImageWeb("assets/images/$imagePath");
+        });
+      },
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: Icon(icon),
+          ),
+          FittedBox(
+            fit: BoxFit.cover,
+            child: Text(type, maxLines: 1),
+          ),
+        ],
+      ),
     );
   }
 }
