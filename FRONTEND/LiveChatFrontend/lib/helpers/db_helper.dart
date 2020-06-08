@@ -7,10 +7,10 @@ class DBHelper {
     return await sql.openDatabase(path.join(dbPath, "$uid.db"),
         onCreate: (db, version) {
       db.execute(
-        "CREATE TABLE MESSAGES(id TEXT PRIMARY KEY, sender TEXT, content TEXT, time TEXT, chatName TEXT)",
+        "CREATE TABLE USERS(username TEXT PRIMARY KEY, imageUrl TEXT)",
       );
       db.execute(
-        "CREATE TABLE USERS(username TEXT PRIMARY KEY, imageUrl TEXT)",
+        "CREATE TABLE MESSAGES(id TEXT PRIMARY KEY, sender TEXT, content TEXT, time TEXT, chatName TEXT, FOREIGN KEY(sender) REFERENCES USERS(username))",
       );
     }, version: 1);
   }
