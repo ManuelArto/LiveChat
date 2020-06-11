@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:LiveChatFrontend/providers/auth_provider.dart';
 import 'package:LiveChatFrontend/widgets/auth/user_image_picker.dart';
-import 'package:LiveChatFrontend/widgets/auth/user_image_picker_web.dart';
+import 'package:LiveChatFrontend/widgets/auth/user_default_image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'package:provider/provider.dart';
@@ -21,7 +21,8 @@ class _AuthFormState extends State<AuthForm>
     with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
-  var _isLogin = true;
+  var _isLogin = false;
+  var _defaultPhoto = true;
   var _isLoading = false;
   Map<String, dynamic> _authData = {
     "email": "",
@@ -55,7 +56,7 @@ class _AuthFormState extends State<AuthForm>
           _authData["email"],
           _authData["username"],
           _authData["password"],
-          base64Encode(identical(0, 0.0)
+          base64Encode(identical(0, 0.0) || _defaultPhoto
               ? _authData["imageFile"]
               : _authData["imageFile"].readAsBytesSync()),
         );
@@ -75,9 +76,34 @@ class _AuthFormState extends State<AuthForm>
     _authData["imageFile"] = image;
   }
 
-  Future<void> _pickedImageWeb(String path) async {
+  Future<void> _pickedDefaultImage(String path) async {
     ByteData bytes = await rootBundle.load(path);
     _authData["imageFile"] = bytes.buffer.asUint8List();
+  }
+
+  List<Widget> imageForm() {
+    return [
+      if (!identical(0, 0.0))
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () {
+              _authData["imageFile"] = null;
+              setState(() => _defaultPhoto = !_defaultPhoto);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text("Switch Image"),
+                Icon(Icons.switch_camera),
+              ],
+            ),
+          ),
+        ),
+      if (!_defaultPhoto) UserImagePicker(_pickedImage, _authData["imageFile"]),
+      if (identical(0, 0.0) || _defaultPhoto)
+        UserDefaultPicker(_pickedDefaultImage)
+    ];
   }
 
   @override
@@ -102,10 +128,7 @@ class _AuthFormState extends State<AuthForm>
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      if (!_isLogin && !identical(0, 0.0))
-                        UserImagePicker(_pickedImage, _authData["imageFile"]),
-                      if (!_isLogin && identical(0, 0.0))
-                        UserImagePickerWeb(_pickedImageWeb),
+                      if (!_isLogin) ...imageForm(),
                       if (!_isLogin)
                         TextFormField(
                           autocorrect: false,

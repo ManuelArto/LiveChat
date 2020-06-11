@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class UserImagePickerWeb extends StatefulWidget {
+class UserDefaultPicker extends StatefulWidget {
   final Function pickedImageWeb;
 
-  UserImagePickerWeb(this.pickedImageWeb);
+  UserDefaultPicker(this.pickedImageWeb);
 
   @override
-  _UserImagePickerWebState createState() => _UserImagePickerWebState();
+  _UserDefaultPickerState createState() => _UserDefaultPickerState();
 }
 
-class _UserImagePickerWebState extends State<UserImagePickerWeb> {
+class _UserDefaultPickerState extends State<UserDefaultPicker> {
   int active = -1;
 
   @override
