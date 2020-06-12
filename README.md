@@ -6,7 +6,7 @@ Livechat is cross-platform web application where users can authenticate and chat
 ## Usage
 Click [here](https://manuelarto.github.io/livechat) to visit the web-app
 
-Click [here](https://drive.google.com/open?id=1yT_z4t_odaAdmYYD84YqOGvCBLhWufLQ) to download the apk file
+Click [here](https://manuelarto.github.io/livechat/apk) to download the apk file
 
 ## Description
 Livechat is a full-stack application that implement a cross-platform web application using [Flutter UI toolkit](https://flutter.dev/) and a Python server for authentication and instant messaging.
