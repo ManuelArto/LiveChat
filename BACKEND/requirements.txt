@@ -6,7 +6,7 @@ click==7.1.2
 cryptography==3.3.2
 dnspython==1.16.0
 Flask==1.1.2
-Flask-Cors==3.0.8
+Flask-Cors==3.0.9
 Flask-SocketIO==4.3.0
 Flask-SQLAlchemy==2.4.1
 gcloud==0.17.0
